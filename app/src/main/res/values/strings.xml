@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">BakeNow</string>
+    <string name="recipe">Recipe</string>
+    <string name="base_url">https://d17h27t6h515a5.cloudfront.net</string>
+</resources>
