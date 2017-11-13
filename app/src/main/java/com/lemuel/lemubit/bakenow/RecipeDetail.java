@@ -18,15 +18,14 @@ public class RecipeDetail extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
-        position=getIntent().getExtras().getInt("position");
-
+        position = getIntent().getExtras().getInt("position");
         IngredientsFragment ingredientsFrag = new IngredientsFragment();
-        ingredientsFrag.setPosition(position);
-        Bundle b=new Bundle();
-        b.putParcelableArrayList("list",(ArrayList<? extends Parcelable>) MainActivity.receipes);
+        Bundle b = new Bundle();
+        b.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) MainActivity.receipes);
+        b.putInt("position", position);
         ingredientsFrag.setArguments(b);
         getSupportFragmentManager().beginTransaction()
-               .replace(R.id.FRGingredients, ingredientsFrag)
+                .replace(R.id.FRGingredients, ingredientsFrag)
                 .commit();
     }
 }

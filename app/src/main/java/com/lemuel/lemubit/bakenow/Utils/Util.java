@@ -69,4 +69,22 @@ public class Util {
         }
     }
 
+    @NonNull
+    public static Boolean ObjectisNull(Object value) {
+        if (value == null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @NonNull
+    public static Boolean ObjectisNotNull(Object value) {
+        if (value == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
 }

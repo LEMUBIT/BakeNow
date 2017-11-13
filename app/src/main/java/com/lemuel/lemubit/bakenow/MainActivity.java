@@ -68,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<Recipe>> call, Throwable t) {
                 Log.d("Error", t.getMessage());
+                recipeProgress.setVisibility(View.INVISIBLE);
+                Toast.makeText(MainActivity.this, "Check Connection", Toast.LENGTH_SHORT).show();
             }
         });
     }

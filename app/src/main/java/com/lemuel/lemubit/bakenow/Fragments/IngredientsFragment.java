@@ -12,6 +12,7 @@ import com.lemuel.lemubit.bakenow.Models.Ingredients;
 import com.lemuel.lemubit.bakenow.Models.Recipe;
 import com.lemuel.lemubit.bakenow.R;
 import com.lemuel.lemubit.bakenow.RecipeDetail;
+import com.lemuel.lemubit.bakenow.Utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,35 +23,22 @@ import java.util.List;
 
 public class IngredientsFragment extends Fragment {
     int position;
-     List<Recipe> mRecipes=new ArrayList<>();
-    String test;
+    List<Recipe> mRecipes = new ArrayList<>();
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-      //  test=String.valueOf(mRecipes.size());
-    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.frag_recipe_ingredients, container, false);
         TextView ingredients = rootView.findViewById(R.id.ingredientsTxt);
-        //  List<Ingredients> LSTingredients = receipes.get(position).getIngredients();
-        //ingredients.setText(LSTingredients.get(position).getIngredient());
-        //TODO LIST is saying null..mRecipes not recognized
         Bundle bundle = this.getArguments();
-        ingredients.setText(bundle.getParcelableArrayList("list").size());
+        if (Util.ObjectisNotNull(bundle)) {
+            mRecipes = bundle.getParcelableArrayList("list");
+            ingredients.setText(String.valueOf(bundle.getInt("position")));
+        }
+
         return rootView;
     }
 
-    public void setPosition(int position) {
-        this.position = position;
-    }
 
-    public void setRecipes(List<Recipe> recipes) {
-
-        mRecipes = new ArrayList<>(recipes);
-        test = String.valueOf(mRecipes.get(0).getName());
-    }
 }
