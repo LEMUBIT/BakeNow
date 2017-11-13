@@ -1,16 +1,22 @@
 package com.lemuel.lemubit.bakenow.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by charl on 08/11/2017.
- */
+ **/
 
-public class Steps {
+public class Steps implements Parcelable {
 
     private int id;
     private String shortDescription;
     private String description;
     private String videoURL;
     private String thumbnailURL;
+
+    public Steps() {
+    }
 
     public int getId() {
         return id;
@@ -51,4 +57,38 @@ public class Steps {
     public void setThumbnailURL(String thumbnailURL) {
         this.thumbnailURL = thumbnailURL;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id);
+        parcel.writeString(shortDescription);
+        parcel.writeString(description);
+        parcel.writeString(videoURL);
+        parcel.writeString(thumbnailURL);
+    }
+
+    public static final Parcelable.Creator
+            CREATOR = new Parcelable.Creator<Steps>() {
+        public Steps createFromParcel(Parcel in) {
+            return new Steps(in);
+        }
+
+        public Steps[] newArray(int size) {
+            return new Steps[size];
+        }
+    };
+
+    private Steps(Parcel in) {
+        id = in.readInt();
+        shortDescription = in.readString();
+        description = in.readString();
+        videoURL = in.readString();
+        thumbnailURL = in.readString();
+    }
+
 }

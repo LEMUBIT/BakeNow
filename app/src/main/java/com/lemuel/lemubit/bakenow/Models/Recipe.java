@@ -1,12 +1,16 @@
 package com.lemuel.lemubit.bakenow.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by charl on 08/11/2017.
  */
 
-public class Recipe {
+public class Recipe implements Parcelable {
     private int id;
     private String name;
     private List<Ingredients> ingredients;
@@ -14,6 +18,42 @@ public class Recipe {
     private int servings;
     private String image;
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id);
+        parcel.writeString(name);
+        parcel.writeTypedList(ingredients);
+        parcel.writeTypedList(steps);
+        parcel.writeInt(servings);
+        parcel.writeString(image);
+    }
+
+    public static final Parcelable.Creator
+            CREATOR = new Parcelable.Creator() {
+        public Recipe createFromParcel(Parcel in) {
+            return new Recipe(in);
+        }
+
+        public Recipe[] newArray(int size) {
+            return new Recipe[size];
+        }
+    };
+
+    private Recipe(Parcel in) {
+        id = in.readInt();
+        name = in.readString();
+        ingredients = new ArrayList<>();
+        in.readTypedList(ingredients, Ingredients.CREATOR);
+        steps = new ArrayList<>();
+        in.readTypedList(steps, Steps.CREATOR);
+        servings = in.readInt();
+        image = in.readString();
+    }
 
     public int getId() {
         return id;
@@ -62,4 +102,6 @@ public class Recipe {
     public void setImage(String image) {
         this.image = image;
     }
+
+
 }

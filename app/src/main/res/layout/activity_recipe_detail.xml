@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+
+<!--RECIPE DETAIL FOR SMALL SCREEN-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.lemuel.lemubit.bakenow.RecipeDetail">
+    android:orientation="vertical">
 
-</android.support.constraint.ConstraintLayout>
+    <fragment
+        android:id="@+id/FRGingredients"
+        android:name="com.lemuel.lemubit.bakenow.Fragments.IngredientsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <fragment
+        android:id="@+id/FRGdescription"
+        android:name="com.lemuel.lemubit.bakenow.Fragments.StepDescriptionFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

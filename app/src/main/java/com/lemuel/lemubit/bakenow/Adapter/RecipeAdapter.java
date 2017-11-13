@@ -1,16 +1,22 @@
 package com.lemuel.lemubit.bakenow.Adapter;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lemuel.lemubit.bakenow.Models.Recipe;
 import com.lemuel.lemubit.bakenow.R;
+import com.lemuel.lemubit.bakenow.RecipeDetail;
 import com.lemuel.lemubit.bakenow.Utils.Util;
 import com.squareup.picasso.Picasso;
 
@@ -57,7 +63,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         return receipes.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView RecipeImage;
         TextView RecipeName;
 
@@ -65,6 +71,26 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             super(itemView);
             RecipeImage = itemView.findViewById(R.id.recipeIMG);
             RecipeName = itemView.findViewById(R.id.recipeName);
+itemView.setOnClickListener(this);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                itemView.setOnTouchListener(new View.OnTouchListener() {
+
+                    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+                    @Override
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                        view.findViewById(R.id.recipeLYT).getBackground().setHotspot(motionEvent.getX(), motionEvent.getY());
+
+
+                        return false;
+                    }
+                });
+            }
+        }
+
+        @Override
+        public void onClick(View view) {
+            Toast.makeText(context, "Name:"+receipes.get(getAdapterPosition()).getName(), Toast.LENGTH_SHORT).show();
+            context.startActivity(new Intent(context, RecipeDetail.class).putExtra("position",getAdapterPosition()));
         }
     }
 }
