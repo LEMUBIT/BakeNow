@@ -35,7 +35,7 @@ public class StepDescriptionAdapter extends RecyclerView.Adapter<StepDescription
 
     @Override
     public void onBindViewHolder(StepDescriptionAdapter.StepViewHolder holder, int position) {
-        holder.step.setText("LOL");
+        holder.step.setText(steps.get(position).getShortDescription().toString());
         Toast.makeText(context, steps.get(position).getShortDescription().toString(), Toast.LENGTH_SHORT).show();
     }
 
