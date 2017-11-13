@@ -27,13 +27,13 @@ public class RecipeDetail extends AppCompatActivity {
                 .replace(R.id.FRGingredients, ingredientsFrag)
                 .commit();
 
-        StepDescriptionFragment stepDescriptionFragment=new StepDescriptionFragment();
+        StepDescriptionFragment stepDescriptionFragment = new StepDescriptionFragment();
         Bundle d = new Bundle();
         d.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) MainActivity.recipes);
         d.putInt("position", position);
         stepDescriptionFragment.setArguments(d);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.FRGdescription,stepDescriptionFragment)
+                .replace(R.id.FRGdescription, stepDescriptionFragment)
                 .commit();
     }
 }

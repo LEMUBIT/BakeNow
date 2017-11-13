@@ -41,7 +41,7 @@ public class StepDescriptionFragment extends Fragment {
             mRecipes = bundle.getParcelableArrayList("list");
             position = bundle.getInt("position");
             mSteps = mRecipes.get(position).getSteps();
-            StepDescriptionAdapter stepDescriptionAdapter=new StepDescriptionAdapter(mSteps,getActivity());
+            StepDescriptionAdapter stepDescriptionAdapter = new StepDescriptionAdapter(mSteps, getActivity());
             description.setLayoutManager(new LinearLayoutManager(getActivity()));
             description.setAdapter(stepDescriptionAdapter);
 

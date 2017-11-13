@@ -49,7 +49,7 @@ public class StepDescriptionAdapter extends RecyclerView.Adapter<StepDescription
 
         public StepViewHolder(View itemView) {
             super(itemView);
-            step=itemView.findViewById(R.id.stepTXT);
+            step = itemView.findViewById(R.id.stepTXT);
 
         }
     }

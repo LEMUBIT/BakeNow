@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
                 recipeProgress.setVisibility(View.INVISIBLE);
-                 recipes = response.body();
+                recipes = response.body();
                 recipeAdapter = new RecipeAdapter(MainActivity.this, recipes);
                 recipeRecyclerV.setAdapter(recipeAdapter);
 

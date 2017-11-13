@@ -13,9 +13,8 @@ public class Util {
 
 
     @NonNull
-    public static Boolean emptyString(String value)
-    {
-        if (value.isEmpty() || value.length() < 1 || value == null || value=="") {
+    public static Boolean emptyString(String value) {
+        if (value.isEmpty() || value.length() < 1 || value == null || value == "") {
             return true;//if empty or null return true
         } else {
             return false;//return false if not empty
@@ -24,10 +23,8 @@ public class Util {
     }
 
 
-
     @NonNull
-    public static Boolean isLargeScreen(Activity context)
-    {
+    public static Boolean isLargeScreen(Activity context) {
         //CALCULATE SCREEN SIZE, IN THIS CASE LARGE SCREENS ARE >700
         DisplayMetrics metrics = new DisplayMetrics();
         context.getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -37,19 +34,15 @@ public class Util {
         float widthDp = widthPixels / scaleFactor;
         float heightDp = heightPixels / scaleFactor;
         float smallestWidth = Math.min(widthDp, heightDp);
-        if(smallestWidth>=700)
-        {
+        if (smallestWidth >= 700) {
             return true;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
 
     @NonNull
-    public static Boolean isMediumScreen(Activity context)
-    {
+    public static Boolean isMediumScreen(Activity context) {
         //CALCULATE SCREEN SIZE, IN THIS CASE MEDIUM SCREENS ARE >=600
         DisplayMetrics metrics = new DisplayMetrics();
         context.getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -59,12 +52,9 @@ public class Util {
         float widthDp = widthPixels / scaleFactor;
         float heightDp = heightPixels / scaleFactor;
         float smallestWidth = Math.min(widthDp, heightDp);
-        if(smallestWidth>=600)
-        {
+        if (smallestWidth >= 600) {
             return true;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
@@ -87,19 +77,13 @@ public class Util {
         }
     }
 
-    public static String Plural(Double quantity,String measure)
-    {
-        if(quantity<=1.0)
-        {
+    public static String Plural(Double quantity, String measure) {
+        if (quantity <= 1.0) {
             return measure;
-        }
-        else if(quantity>1.0 && (measure.equals("CUP") || measure.equals("UNIT")) )
-        {
-            measure=measure+"s";
+        } else if (quantity > 1.0 && (measure.equals("CUP") || measure.equals("UNIT"))) {
+            measure = measure + "s";
             return measure;
-        }
-        else
-        {
+        } else {
             return measure;
         }
     }

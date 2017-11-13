@@ -88,7 +88,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
         @Override
         public void onClick(View view) {
-        //    Toast.makeText(context, "Name:" + recipes.get(getAdapterPosition()).getName(), Toast.LENGTH_SHORT).show();
+            //    Toast.makeText(context, "Name:" + recipes.get(getAdapterPosition()).getName(), Toast.LENGTH_SHORT).show();
             context.startActivity(new Intent(context, RecipeDetail.class).putExtra("position", getAdapterPosition()));
         }
     }
