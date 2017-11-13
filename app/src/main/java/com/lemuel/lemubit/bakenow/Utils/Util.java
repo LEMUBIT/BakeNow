@@ -87,4 +87,21 @@ public class Util {
         }
     }
 
+    public static String Plural(Double quantity,String measure)
+    {
+        if(quantity<=1.0)
+        {
+            return measure;
+        }
+        else if(quantity>1.0 && (measure.equals("CUP") || measure.equals("UNIT")) )
+        {
+            measure=measure+"s";
+            return measure;
+        }
+        else
+        {
+            return measure;
+        }
+    }
+
 }

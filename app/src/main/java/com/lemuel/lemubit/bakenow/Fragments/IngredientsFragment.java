@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lemuel.lemubit.bakenow.Models.Ingredients;
 import com.lemuel.lemubit.bakenow.Models.Recipe;
@@ -24,7 +25,7 @@ import java.util.List;
 public class IngredientsFragment extends Fragment {
     int position;
     List<Recipe> mRecipes = new ArrayList<>();
-
+    List<Ingredients> mIngredients = new ArrayList<>();
 
     @Nullable
     @Override
@@ -34,7 +35,14 @@ public class IngredientsFragment extends Fragment {
         Bundle bundle = this.getArguments();
         if (Util.ObjectisNotNull(bundle)) {
             mRecipes = bundle.getParcelableArrayList("list");
-            ingredients.setText(String.valueOf(bundle.getInt("position")));
+            position = bundle.getInt("position");
+            mIngredients = mRecipes.get(position).getIngredients();
+
+            for (int i = 0; i < mIngredients.size(); i++) {
+                ingredients.append("-- " + mIngredients.get(i).getQuantity() + " "
+                        + Util.Plural(mIngredients.get(i).getQuantity(), mIngredients.get(i).getMeasure())
+                        + " of " + mIngredients.get(i).getIngredient() + " \n");
+            }
         }
 
         return rootView;

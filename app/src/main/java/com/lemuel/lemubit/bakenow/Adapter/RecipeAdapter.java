@@ -28,12 +28,12 @@ import java.util.List;
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder> {
 
-    private List<Recipe> receipes;
+    private List<Recipe> recipes;
     private Context context;
 
-    public RecipeAdapter(Context context, List<Recipe> receipes) {
+    public RecipeAdapter(Context context, List<Recipe> recipes) {
         this.context = context;
-        this.receipes = receipes;
+        this.recipes = recipes;
     }
 
     @Override
@@ -44,14 +44,13 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(RecipeAdapter.ViewHolder holder, int position) {
-        ViewHolder myHolder = holder;
-        myHolder.RecipeName.setText(receipes.get(position).getName().toString());
 
+        holder.RecipeName.setText(recipes.get(position).getName().toString());
         try {
-            if (Util.emptyString(receipes.get(position).getImage())) {
-                Picasso.with(context).load(R.drawable.chef).into(myHolder.RecipeImage);
+            if (Util.emptyString(recipes.get(position).getImage())) {
+                Picasso.with(context).load(R.drawable.chef).into(holder.RecipeImage);
             } else {
-                Picasso.with(context).load(receipes.get(position).getImage()).into(myHolder.RecipeImage);
+                Picasso.with(context).load(recipes.get(position).getImage()).into(holder.RecipeImage);
             }
         } catch (Exception e) {
             Log.e("image eeer:", e.getMessage());
@@ -60,7 +59,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
     @Override
     public int getItemCount() {
-        return receipes.size();
+        return recipes.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -71,7 +70,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             super(itemView);
             RecipeImage = itemView.findViewById(R.id.recipeIMG);
             RecipeName = itemView.findViewById(R.id.recipeName);
-itemView.setOnClickListener(this);
+            itemView.setOnClickListener(this);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 itemView.setOnTouchListener(new View.OnTouchListener() {
 
@@ -89,8 +88,8 @@ itemView.setOnClickListener(this);
 
         @Override
         public void onClick(View view) {
-            Toast.makeText(context, "Name:"+receipes.get(getAdapterPosition()).getName(), Toast.LENGTH_SHORT).show();
-            context.startActivity(new Intent(context, RecipeDetail.class).putExtra("position",getAdapterPosition()));
+        //    Toast.makeText(context, "Name:" + recipes.get(getAdapterPosition()).getName(), Toast.LENGTH_SHORT).show();
+            context.startActivity(new Intent(context, RecipeDetail.class).putExtra("position", getAdapterPosition()));
         }
     }
 }

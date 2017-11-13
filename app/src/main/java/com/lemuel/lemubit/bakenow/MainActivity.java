@@ -34,7 +34,8 @@ public class MainActivity extends AppCompatActivity {
 
     RecyclerView.LayoutManager mLayoutManager;
     RecipeAdapter recipeAdapter;
-    static List<Recipe> receipes;
+    static List<Recipe> recipes;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,8 +60,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
                 recipeProgress.setVisibility(View.INVISIBLE);
-                 receipes = response.body();
-                recipeAdapter = new RecipeAdapter(MainActivity.this, receipes);
+                 recipes = response.body();
+                recipeAdapter = new RecipeAdapter(MainActivity.this, recipes);
                 recipeRecyclerV.setAdapter(recipeAdapter);
 
             }
