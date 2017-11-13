@@ -110,6 +110,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //TODO work on savedinstancestate
+        // work on savedinstancestate
     }
 }
