@@ -4,4 +4,7 @@
     <string name="base_url">https://d17h27t6h515a5.cloudfront.net</string>
     <string name="steps">STEPS</string>
     <string name="ingredients">INGREDIENTS</string>
+    <string name="NoVideo">Video Not Available!</string>
+    <string name="next">NEXT</string>
+    <string name="back">BACK</string>
 </resources>

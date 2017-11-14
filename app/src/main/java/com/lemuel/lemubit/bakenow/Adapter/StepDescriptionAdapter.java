@@ -22,14 +22,31 @@ public class StepDescriptionAdapter extends RecyclerView.Adapter<StepDescription
     private List<Steps> steps;
     private Context context;
 
+    // Define a new interface OnStepClickListener that triggers a callback in the host activity
+    OnStepClickListener mCallback;
+
+    public interface OnStepClickListener {
+        void onStepSelected(int position,List<Steps> steps);
+    }
+
+
     public StepDescriptionAdapter(List<Steps> steps, Context context) {
         this.steps = steps;
         this.context = context;
     }
 
+
     @Override
     public StepDescriptionAdapter.StepViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_step_description_card, parent, false);
+
+        try {
+            mCallback = (OnStepClickListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnImageClickListener");
+        }
+
         return new StepViewHolder(view);
     }
 
@@ -54,8 +71,8 @@ public class StepDescriptionAdapter extends RecyclerView.Adapter<StepDescription
 
         @Override
         public void onClick(View view) {
-            Steps CurrentStep = steps.get(getAdapterPosition());
-            Toast.makeText(context, "Step:" + CurrentStep.getShortDescription(), Toast.LENGTH_SHORT).show();
+            mCallback.onStepSelected(getAdapterPosition(),steps);
+
         }
     }
 }

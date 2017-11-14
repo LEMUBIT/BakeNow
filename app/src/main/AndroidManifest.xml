@@ -18,7 +18,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RecipeDetail"></activity>
+        <activity
+            android:name=".RecipeDetail"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".RecipeStepDetail"
+            android:parentActivityName=".RecipeDetail"></activity>
     </application>
 
 </manifest>

@@ -5,13 +5,15 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
+import android.widget.Toast;
+
+import com.lemuel.lemubit.bakenow.MainActivity;
 
 /**
  * Created by charl on 10/11/2017.
  */
 
 public class Util {
-
 
     @NonNull
     public static Boolean emptyString(String value) {
@@ -23,6 +25,15 @@ public class Util {
 
     }
 
+    @NonNull
+    public static Boolean StringNotEmpty(String value) {
+        if (value.isEmpty() || value.length() < 1 || value == null || value == "") {
+            return false;//if empty or null return false
+        } else {
+            return true;//return true if not empty
+        }
+
+    }
 
     @NonNull
     public static Boolean isLargeScreen(Activity context) {
@@ -100,5 +111,10 @@ public class Util {
             return false;
         }
     }
+
+//    public static void ShowVideoNotAvailable(Context context)
+//    {
+//        Toast.makeText(context, "Video Not Available!", Toast.LENGTH_LONG).show();
+//    }
 
 }
