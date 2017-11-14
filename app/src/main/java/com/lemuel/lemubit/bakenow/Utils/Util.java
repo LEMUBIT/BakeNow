@@ -2,6 +2,7 @@ package com.lemuel.lemubit.bakenow.Utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 
@@ -85,6 +86,18 @@ public class Util {
             return measure;
         } else {
             return measure;
+        }
+    }
+
+    public static Boolean isPortraitMode(int orientation)
+    {
+        if(orientation== Configuration.ORIENTATION_PORTRAIT)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 

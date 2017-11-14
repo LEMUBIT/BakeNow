@@ -35,9 +35,7 @@ public class StepDescriptionAdapter extends RecyclerView.Adapter<StepDescription
 
     @Override
     public void onBindViewHolder(StepDescriptionAdapter.StepViewHolder holder, int position) {
-        //TODO: ERROR: TEXT VIEW step no being set with required text, while toast shows :(
         holder.step.setText(steps.get(position).getShortDescription().toString());
-        Toast.makeText(context, holder.step.getText().toString(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -45,13 +43,19 @@ public class StepDescriptionAdapter extends RecyclerView.Adapter<StepDescription
         return steps.size();
     }
 
-    public class StepViewHolder extends RecyclerView.ViewHolder {
+    public class StepViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView step;
 
         public StepViewHolder(View itemView) {
             super(itemView);
             step = itemView.findViewById(R.id.stepTXT);
+            itemView.setOnClickListener(this);
+        }
 
+        @Override
+        public void onClick(View view) {
+            Steps CurrentStep = steps.get(getAdapterPosition());
+            Toast.makeText(context, "Step:" + CurrentStep.getShortDescription(), Toast.LENGTH_SHORT).show();
         }
     }
 }

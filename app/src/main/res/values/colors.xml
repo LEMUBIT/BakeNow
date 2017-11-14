@@ -3,5 +3,7 @@
     <color name="colorPrimary">#FF9800</color>
     <color name="colorPrimaryDark">#E65100</color>
     <color name="colorAccent">#FFD180</color>
+    <color name="linkColor">#556B2F</color>
     <color name="cardText">#795548</color>
+    <color name="divider">#BDBDBD</color>
 </resources>

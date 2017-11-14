@@ -76,10 +76,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadAppropriateLayout() {
+
+        //GET ORIENTATION
+        int orientation=MainActivity.this.getResources().getConfiguration().orientation;
+
         //IF SCREEN IS LARGE, SHOW MORE RECIPES PER ROW
         if (Util.isLargeScreen(MainActivity.this)) {
             //LARGE SCREEN
-            if (MainActivity.this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            if ( Util.isPortraitMode(orientation)) {
                 recipeRecyclerV.setLayoutManager(new GridLayoutManager(MainActivity.this, 4));
                 mLayoutManager = recipeRecyclerV.getLayoutManager();
             } else {
@@ -88,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
             }
         } else if (Util.isMediumScreen(MainActivity.this)) {
             //NOT SO LARGE SCREEN :)
-            if (MainActivity.this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            if (Util.isPortraitMode(orientation)) {
                 recipeRecyclerV.setLayoutManager(new GridLayoutManager(MainActivity.this, 3));
                 mLayoutManager = recipeRecyclerV.getLayoutManager();
             } else {
@@ -97,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
             }
         } else {
             //SMALLER SCREENS
-            if (MainActivity.this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            if (Util.isPortraitMode(orientation)) {
                 recipeRecyclerV.setLayoutManager(new GridLayoutManager(MainActivity.this, 2));
                 mLayoutManager = recipeRecyclerV.getLayoutManager();
             } else {
