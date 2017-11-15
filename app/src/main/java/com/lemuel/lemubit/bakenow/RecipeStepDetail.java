@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +29,8 @@ public class RecipeStepDetail extends AppCompatActivity implements com.devbracke
     VideoView videoView;
     @BindView(R.id.InstructionTXT)
     TextView instructionTXT;
+    @BindView(R.id.imageView)
+    ImageView imageView;
 
     Toast toast;
 
@@ -36,21 +39,26 @@ public class RecipeStepDetail extends AppCompatActivity implements com.devbracke
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_step_detail);
         ButterKnife.bind(this);
-//        ActionBar actionBar=getSupportActionBar(); //crashing when recreating Recipe Detail
-//        actionBar.setDisplayHomeAsUpEnabled(true);
+
         steps = getIntent().getExtras().getParcelableArrayList("step");
         position = getIntent().getExtras().getInt("stepPosition");
         currentPosition = position;
         instruction = steps.get(position).getDescription();
         String videoURL = steps.get(position).getVideoURL();
-        toast = Toast.makeText(this, R.string.NoVideo, Toast.LENGTH_LONG);
+        String thumbnailURL = steps.get(position).getThumbnailURL();
+        toast = Toast.makeText(this, R.string.NoVideo, Toast.LENGTH_SHORT);
         if (Util.StringNotEmpty(instruction)) {
             instructionTXT.setText(instruction);
         }
 
         if (Util.StringNotEmpty(videoURL)) {
             setupVideoView(videoURL);
+        } else if (Util.StringNotEmpty(thumbnailURL)) {
+            setupVideoView(thumbnailURL);
+
         } else {
+            imageView.setVisibility(View.VISIBLE);
+            videoView.setVisibility(View.INVISIBLE);
             toast.show();
         }
 
@@ -68,6 +76,7 @@ public class RecipeStepDetail extends AppCompatActivity implements com.devbracke
 
         instruction = steps.get(currentPosition).getDescription();
         String videoURL = steps.get(currentPosition).getVideoURL();
+        String thumbnailURL = steps.get(currentPosition).getThumbnailURL();
 
         if (Util.StringNotEmpty(instruction)) {
             instructionTXT.setText(instruction);
@@ -76,9 +85,14 @@ public class RecipeStepDetail extends AppCompatActivity implements com.devbracke
 
         if (Util.StringNotEmpty(videoURL)) {
             videoView.setVisibility(View.VISIBLE);
+            imageView.setVisibility(View.INVISIBLE);
             setupVideoView(videoURL);
+        } else if (Util.StringNotEmpty(thumbnailURL)) {
+            setupVideoView(thumbnailURL);
+
         } else {
             toast.show();
+            imageView.setVisibility(View.VISIBLE);
             videoView.setVisibility(View.INVISIBLE);
         }
 
@@ -94,6 +108,7 @@ public class RecipeStepDetail extends AppCompatActivity implements com.devbracke
             currentPosition = steps.size() - 1;
         instruction = steps.get(currentPosition).getDescription();
         String videoURL = steps.get(currentPosition).getVideoURL();
+        String thumbnailURL = steps.get(currentPosition).getThumbnailURL();
 
         if (Util.StringNotEmpty(instruction)) {
             instructionTXT.setText(instruction);
@@ -102,15 +117,19 @@ public class RecipeStepDetail extends AppCompatActivity implements com.devbracke
 
         if (Util.StringNotEmpty(videoURL)) {
             videoView.setVisibility(View.VISIBLE);
+            imageView.setVisibility(View.INVISIBLE);
             setupVideoView(videoURL);
+        } else if (Util.StringNotEmpty(thumbnailURL)) {
+            setupVideoView(thumbnailURL);
         } else {
             toast.show();
+            videoView.stopPlayback();
             videoView.setVisibility(View.INVISIBLE);
+            imageView.setVisibility(View.VISIBLE);
         }
     }
 
     private void setupVideoView(String url) {
-        videoView = (VideoView) findViewById(R.id.video_view);
         videoView.setOnPreparedListener(this);
         videoView.setVideoURI(Uri.parse(url));
     }
@@ -118,5 +137,11 @@ public class RecipeStepDetail extends AppCompatActivity implements com.devbracke
     @Override
     public void onPrepared() {
         videoView.start();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        videoView.release();
     }
 }

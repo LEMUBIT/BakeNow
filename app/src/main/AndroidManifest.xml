@@ -23,7 +23,7 @@
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".RecipeStepDetail"
-            android:parentActivityName=".RecipeDetail"></activity>
+           ></activity>
     </application>
 
 </manifest>

@@ -1,6 +1,7 @@
 package com.lemuel.lemubit.bakenow;
 
 import android.content.res.Configuration;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -15,6 +16,7 @@ import com.lemuel.lemubit.bakenow.Models.Recipe;
 import com.lemuel.lemubit.bakenow.RetrofitRequestInterface.RequestInterface;
 import com.lemuel.lemubit.bakenow.Utils.Util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -31,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView recipeRecyclerV;
     @BindView(R.id.recipe_progress)
     ProgressBar recipeProgress;
-
+    Parcelable mListState;
     RecyclerView.LayoutManager mLayoutManager;
     RecipeAdapter recipeAdapter;
     static List<Recipe> recipes;
@@ -41,49 +43,75 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        loadRecipe();
+        loadRecipe(savedInstanceState);
         loadAppropriateLayout();
     }
 
-    private void loadRecipe() {
-        recipeProgress.setVisibility(View.VISIBLE);
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mListState = mLayoutManager.onSaveInstanceState();
+        outState.putParcelable("listkey", mListState);
+        outState.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) recipes);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState != null) {
+            mListState = savedInstanceState.getParcelable("listkey");
+            recipes = savedInstanceState.getParcelableArrayList("list");
+        }
+    }
+
+    private void loadRecipe(Bundle savedInstanceState) {
+
+        if (Util.ObjectisNull(savedInstanceState)) {
+            recipeProgress.setVisibility(View.VISIBLE);
         /*build Retrofit using Retrofit.Builder() and convert JSON data
         into accessible data object using GsonConverterFactory*/
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(getString(R.string.base_url))
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(getString(R.string.base_url))
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
 
-        RequestInterface request = retrofit.create(RequestInterface.class);
-        Call<List<Recipe>> call = request.getRecipes();//response will be a JSON array not a JSON object
-        call.enqueue(new Callback<List<Recipe>>() {
-            @Override
-            public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
-                recipeProgress.setVisibility(View.INVISIBLE);
-                recipes = response.body();
-                recipeAdapter = new RecipeAdapter(MainActivity.this, recipes);
-                recipeRecyclerV.setAdapter(recipeAdapter);
+            RequestInterface request = retrofit.create(RequestInterface.class);
+            Call<List<Recipe>> call = request.getRecipes();//response will be a JSON array not a JSON object
+            call.enqueue(new Callback<List<Recipe>>() {
+                @Override
+                public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
+                    recipeProgress.setVisibility(View.INVISIBLE);
+                    recipes = response.body();
+                    recipeAdapter = new RecipeAdapter(MainActivity.this, recipes);
+                    recipeRecyclerV.setAdapter(recipeAdapter);
 
-            }
+                }
 
-            @Override
-            public void onFailure(Call<List<Recipe>> call, Throwable t) {
-                Log.d("Error", t.getMessage());
-                recipeProgress.setVisibility(View.INVISIBLE);
-                Toast.makeText(MainActivity.this, "Check Connection", Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onFailure(Call<List<Recipe>> call, Throwable t) {
+                    Log.d("Error", t.getMessage());
+                    recipeProgress.setVisibility(View.INVISIBLE);
+                    Toast.makeText(MainActivity.this, "Check Connection", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            //Load from savedInstanceState if state had been saved :)
+            recipes = savedInstanceState.getParcelableArrayList("list");
+            recipeAdapter = new RecipeAdapter(MainActivity.this, recipes);
+            recipeRecyclerV.setAdapter(recipeAdapter);
+        }
     }
+
 
     private void loadAppropriateLayout() {
 
         //GET ORIENTATION
-        int orientation=MainActivity.this.getResources().getConfiguration().orientation;
+        int orientation = MainActivity.this.getResources().getConfiguration().orientation;
 
         //IF SCREEN IS LARGE, SHOW MORE RECIPES PER ROW
         if (Util.isLargeScreen(MainActivity.this)) {
             //LARGE SCREEN
-            if ( Util.isPortraitMode(orientation)) {
+            if (Util.isPortraitMode(orientation)) {
                 recipeRecyclerV.setLayoutManager(new GridLayoutManager(MainActivity.this, 4));
                 mLayoutManager = recipeRecyclerV.getLayoutManager();
             } else {
@@ -114,6 +142,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // work on savedinstancestate
+        if (mListState != null) {
+            loadAppropriateLayout();
+            mLayoutManager.onRestoreInstanceState(mListState);
+        }
     }
 }

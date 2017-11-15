@@ -1,6 +1,7 @@
 package com.lemuel.lemubit.bakenow.Fragments;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -34,8 +35,16 @@ public class IngredientsFragment extends Fragment {
         TextView ingredients = rootView.findViewById(R.id.ingredientsTxt);
         Bundle bundle = this.getArguments();
         if (Util.ObjectisNotNull(bundle)) {
-            mRecipes = bundle.getParcelableArrayList("list");
-            position = bundle.getInt("position");
+
+            //Check if savedInstanceStateIsNull
+            if (Util.ObjectisNull(savedInstanceState)) {
+                mRecipes = bundle.getParcelableArrayList("list");
+                position = bundle.getInt("position");
+            } else {
+                mRecipes = savedInstanceState.getParcelableArrayList("list");
+                position = savedInstanceState.getInt("position");
+            }
+
             mIngredients = mRecipes.get(position).getIngredients();
 
             for (int i = 0; i < mIngredients.size(); i++) {
@@ -48,5 +57,19 @@ public class IngredientsFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) mRecipes);
+        outState.putInt("position", position);
+    }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            mRecipes = savedInstanceState.getParcelableArrayList("list");
+            position = savedInstanceState.getInt("position");
+        }
+    }
 }
