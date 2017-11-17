@@ -60,7 +60,7 @@
         android:layout_below="@id/ingredientsLBL"
         android:background="@color/cardText"
       />
-    <fragment
+    <FrameLayout
         android:id="@+id/FRGingredients"
         android:name="com.lemuel.lemubit.bakenow.Fragments.IngredientsFragment"
         android:layout_width="match_parent"

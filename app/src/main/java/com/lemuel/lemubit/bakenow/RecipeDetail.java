@@ -12,6 +12,28 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.devbrackets.android.exomedia.ui.widget.VideoView;
+import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.LoadControl;
+import com.google.android.exoplayer2.PlaybackParameters;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.Timeline;
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
+import com.google.android.exoplayer2.extractor.ExtractorsFactory;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.TrackGroupArray;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
+import com.google.android.exoplayer2.trackselection.TrackSelector;
+import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+import com.google.android.exoplayer2.upstream.BandwidthMeter;
+import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.upstream.TransferListener;
 import com.lemuel.lemubit.bakenow.Adapter.RecipeAdapter;
 import com.lemuel.lemubit.bakenow.Adapter.StepDescriptionAdapter;
 import com.lemuel.lemubit.bakenow.Fragments.IngredientsFragment;
@@ -27,7 +49,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class RecipeDetail extends AppCompatActivity implements StepDescriptionAdapter.OnStepClickListener,
-        com.devbrackets.android.exomedia.listener.OnPreparedListener {
+        ExoPlayer.EventListener {
     int position;
     @BindView(R.id.ingredientsLBL)
     TextView ingredientsLBL;
@@ -35,12 +57,20 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
     TextView stepsLBL;
     @BindView(R.id.ToolBar_Recipe_Title)
     TextView ToolBarTitle;
-    VideoView videoView;
+    SimpleExoPlayerView videoView;
     TextView instructionTXT;
     Toast toast;
     ImageView imageView;
     private boolean mTwoPane;
     List<Recipe> recipes = new ArrayList<>();
+
+    private int playerState = 0;
+    private SimpleExoPlayer mExoPlayer;
+    private Timeline.Window window;
+    private DefaultTrackSelector trackSelector;
+    private boolean shouldAutoPlay;
+    private BandwidthMeter bandwidthMeter;
+    private DataSource.Factory mediaDataSourceFactory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +79,14 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
         ButterKnife.bind(this);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        //TODO : fix crash--app crashes when rotated in Recipe Detail Activity
+
+        //////////////////
+        shouldAutoPlay = true;
+        bandwidthMeter = new DefaultBandwidthMeter();
+        //got Assistance from https://github.com/yusufcakmak/ExoPlayerSample
+        mediaDataSourceFactory = new DefaultDataSourceFactory(this, com.google.android.exoplayer2.util.Util.getUserAgent(this, "mediaPlayerSample"), (TransferListener<? super DataSource>) bandwidthMeter);
+        window = new Timeline.Window();
+        ////////////////////
 
         toast = Toast.makeText(this, R.string.NoVideo, Toast.LENGTH_SHORT);
         if (savedInstanceState == null) {
@@ -69,7 +106,7 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
             //if it finds this layout, it means
             // that it is the layout for large screens
             mTwoPane = true;
-            videoView = (VideoView) findViewById(R.id.video_view);
+            videoView = (SimpleExoPlayerView) findViewById(R.id.video_view);
             instructionTXT = (TextView) findViewById(R.id.InstructionTXT);
             imageView = (ImageView) findViewById(R.id.imageView);
         } else {
@@ -92,6 +129,7 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.FRGdescription, stepDescriptionFragment)
                 .commit();
+
 
     }
 
@@ -123,14 +161,19 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
             }
 
             if (Util.StringNotEmpty(videoURL)) {
+                if (playerState == mExoPlayer.STATE_READY)
+                    release();
                 videoView.setVisibility(View.VISIBLE);
                 imageView.setVisibility(View.INVISIBLE);
                 setupVideoView(videoURL);
             } else if (Util.StringNotEmpty(thumbnailURL)) {
+                if (playerState == mExoPlayer.STATE_READY)
+                    release();
                 setupVideoView(thumbnailURL);
             } else {
                 toast.show();
-                videoView.stopPlayback();
+                if (playerState == mExoPlayer.STATE_READY)
+                    release();
                 videoView.setVisibility(View.INVISIBLE);
                 imageView.setVisibility(View.VISIBLE);
             }
@@ -145,19 +188,73 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
     }
 
     private void setupVideoView(String url) {
-        videoView.setOnPreparedListener(this);
-        videoView.setVideoURI(Uri.parse(url));
-    }
 
-    @Override
-    public void onPrepared() {
-        videoView.start();
+        if (mExoPlayer == null) {
+            // Create an instance of the ExoPlayer.
+            TrackSelector trackSelector = new DefaultTrackSelector();
+            LoadControl loadControl = new DefaultLoadControl();
+            mExoPlayer = ExoPlayerFactory.newSimpleInstance(this, trackSelector, loadControl);
+            videoView.setPlayer(mExoPlayer);
+            // Prepare the MediaSource.
+            ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
+            // Prepare the MediaSource. :)
+            MediaSource mediaSource = new ExtractorMediaSource(Uri.parse(url),
+                    mediaDataSourceFactory, extractorsFactory, null, null);
+            mExoPlayer.prepare(mediaSource);
+            mExoPlayer.setPlayWhenReady(true);
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         if (mTwoPane)
-            videoView.release();
+            release();
+    }
+
+    public void release() {
+        mExoPlayer.stop();
+        mExoPlayer.release();
+        mExoPlayer = null;
+    }
+
+    @Override
+    public void onTimelineChanged(Timeline timeline, Object manifest) {
+
+    }
+
+    @Override
+    public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
+
+    }
+
+    @Override
+    public void onLoadingChanged(boolean isLoading) {
+
+    }
+
+    @Override
+    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+        playerState = playbackState;
+    }
+
+    @Override
+    public void onRepeatModeChanged(int repeatMode) {
+
+    }
+
+    @Override
+    public void onPlayerError(ExoPlaybackException error) {
+
+    }
+
+    @Override
+    public void onPositionDiscontinuity() {
+
+    }
+
+    @Override
+    public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
+
     }
 }
