@@ -15,6 +15,7 @@ import com.lemuel.lemubit.bakenow.MainActivity;
 
 public class Util {
 
+    //checks if activity was just run
    public static Boolean firstRun=true;
 
     @NonNull

@@ -287,8 +287,11 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mTwoPane)
+        if (mTwoPane) {
             release();
+            //reset variable firstRun
+            Util.firstRun=true;
+        }
     }
 
     public void release() {
