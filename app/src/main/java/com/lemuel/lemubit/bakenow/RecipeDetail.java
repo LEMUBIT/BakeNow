@@ -89,11 +89,10 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
         ButterKnife.bind(this);
-        if(this.getResources().getConfiguration().orientation== Configuration.ORIENTATION_PORTRAIT) {
+        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             ActionBar actionBar = getSupportActionBar();
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
 
         //////////////////
         shouldAutoPlay = true;
@@ -114,7 +113,7 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
         ingredientsLBL.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_assignment_black_24dp, 0, 0, 0);
         stepsLBL.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_done_all_black_24dp, 0, 0, 0);
 
-        if(this.getResources().getConfiguration().orientation== Configuration.ORIENTATION_PORTRAIT) {
+        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             ToolBarTitle.setText(recipes.get(position).getName());
         }
 
@@ -129,6 +128,7 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
         } else {
             mTwoPane = false;
         }
+
 
         IngredientsFragment ingredientsFrag = new IngredientsFragment();
         Bundle b = new Bundle();
@@ -147,14 +147,18 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.FRGdescription, stepDescriptionFragment)
                 .commit();
-
+        if (Util.ObjectisNull(currentUrl) && Util.firstRun==true) {
+            currentMediaPlayerPosition = 0L;
+            Util.firstRun=false;
+            onStepSelected(0, recipes.get(position).getSteps());
+        }
 
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if(Util.ObjectisNotNull(outState) && Util.ObjectisNotNull(mExoPlayer)) {
+        if (Util.ObjectisNotNull(outState) && Util.ObjectisNotNull(mExoPlayer)) {
             outState.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) recipes);
             outState.putInt("position", position);
             outState.putString("currentUrl", currentUrl);

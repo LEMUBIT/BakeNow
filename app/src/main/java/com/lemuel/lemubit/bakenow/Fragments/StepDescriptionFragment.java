@@ -1,6 +1,7 @@
 package com.lemuel.lemubit.bakenow.Fragments;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
@@ -37,9 +38,18 @@ public class StepDescriptionFragment extends Fragment {
         RecyclerView description = rootView.findViewById(R.id.description_recycler_view);
         Bundle bundle = this.getArguments();
         if (Util.ObjectisNotNull(bundle)) {
-            mRecipes = bundle.getParcelableArrayList("list");
-            position = bundle.getInt("position");
-            mSteps = mRecipes.get(position).getSteps();
+
+            if (Util.ObjectisNull(savedInstanceState)) {
+                mRecipes = bundle.getParcelableArrayList("list");
+                position = bundle.getInt("position");
+                mSteps = mRecipes.get(position).getSteps();
+            } else {
+
+                mSteps = savedInstanceState.getParcelableArrayList("list");
+                position = savedInstanceState.getInt("position");
+            }
+
+
             StepDescriptionAdapter stepDescriptionAdapter = new StepDescriptionAdapter(mSteps, getActivity());
             description.setLayoutManager(new LinearLayoutManager(getActivity()));
             description.setAdapter(stepDescriptionAdapter);
@@ -50,5 +60,21 @@ public class StepDescriptionFragment extends Fragment {
         }
 
         return rootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) mSteps);
+        outState.putInt("position", position);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            mSteps = savedInstanceState.getParcelableArrayList("list");
+            position = savedInstanceState.getInt("position");
+        }
     }
 }

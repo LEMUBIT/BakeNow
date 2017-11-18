@@ -15,6 +15,8 @@ import com.lemuel.lemubit.bakenow.MainActivity;
 
 public class Util {
 
+   public static Boolean firstRun=true;
+
     @NonNull
     public static Boolean emptyString(String value) {
         if (value.isEmpty() || value.length() < 1 || value == null || value == "") {

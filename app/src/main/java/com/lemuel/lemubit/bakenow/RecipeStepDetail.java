@@ -2,6 +2,7 @@ package com.lemuel.lemubit.bakenow;
 
 import android.media.MediaDataSource;
 import android.net.Uri;
+import android.os.Parcelable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -38,6 +39,7 @@ import com.google.android.exoplayer2.upstream.TransferListener;
 import com.lemuel.lemubit.bakenow.Models.Steps;
 import com.lemuel.lemubit.bakenow.Utils.Util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -45,7 +47,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class RecipeStepDetail extends AppCompatActivity implements
-        ExoPlayer.EventListener{
+        ExoPlayer.EventListener {
     List<Steps> steps;
     int position;
     int currentPosition;
@@ -64,7 +66,10 @@ public class RecipeStepDetail extends AppCompatActivity implements
     private BandwidthMeter bandwidthMeter;
     private DataSource.Factory mediaDataSourceFactory;
     Toast toast;
+    private Long currentMediaPlayerPosition;
+    private String currentUrl;
     private SimpleExoPlayer mExoPlayer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,16 +79,27 @@ public class RecipeStepDetail extends AppCompatActivity implements
         //////////////////
         shouldAutoPlay = true;
         bandwidthMeter = new DefaultBandwidthMeter();
-        mediaDataSourceFactory = new DefaultDataSourceFactory(this, com.google.android.exoplayer2.util.Util.getUserAgent(this, "mediaPlayerSample"), (TransferListener<? super DataSource>) bandwidthMeter);
+        mediaDataSourceFactory = new DefaultDataSourceFactory
+                (this, com.google.android.exoplayer2.util.Util.getUserAgent(this, "mediaPlayerSample"),
+                        (TransferListener<? super DataSource>) bandwidthMeter);
         window = new Timeline.Window();
         ////////////////////
-        steps = getIntent().getExtras().getParcelableArrayList("step");
-        position = getIntent().getExtras().getInt("stepPosition");
+        if (savedInstanceState == null) {
+            steps = getIntent().getExtras().getParcelableArrayList("step");
+            position = getIntent().getExtras().getInt("stepPosition");
+        } else {
+            steps = savedInstanceState.getParcelableArrayList("list");
+            position = savedInstanceState.getInt("position");
+        }
         currentPosition = position;
         instruction = steps.get(position).getDescription();
-        String videoURL = steps.get(position).getVideoURL();
-        String thumbnailURL = steps.get(position).getThumbnailURL();
+        // String videoURL = steps.get(position).getVideoURL();
+        // String thumbnailURL = steps.get(position).getThumbnailURL();
+        //TODO test if working for 5inch
+        String thumbnailURL = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";
+        String videoURL = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";
         toast = Toast.makeText(this, R.string.NoVideo, Toast.LENGTH_SHORT);
+
         if (Util.StringNotEmpty(instruction)) {
             instructionTXT.setText(instruction);
         }
@@ -177,6 +193,7 @@ public class RecipeStepDetail extends AppCompatActivity implements
 
         if (mExoPlayer == null) {
             // Create an instance of the ExoPlayer.
+            currentUrl = url;
             TrackSelector trackSelector = new DefaultTrackSelector();
             LoadControl loadControl = new DefaultLoadControl();
             mExoPlayer = ExoPlayerFactory.newSimpleInstance(this, trackSelector, loadControl);
@@ -191,8 +208,52 @@ public class RecipeStepDetail extends AppCompatActivity implements
         }
     }
 
-    public void release()
-    {
+    private void initializePlayer(Bundle savedInstanceState) {
+
+        if (mExoPlayer == null) {
+            // Create an instance of the ExoPlayer.
+            currentUrl = savedInstanceState.getString("currentUrl");
+            currentMediaPlayerPosition = savedInstanceState.getLong("currentMediaPosition");
+            TrackSelector trackSelector = new DefaultTrackSelector();
+            LoadControl loadControl = new DefaultLoadControl();
+            mExoPlayer = ExoPlayerFactory.newSimpleInstance(this, trackSelector, loadControl);
+            videoView.setPlayer(mExoPlayer);
+            // Prepare the MediaSource.
+            ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
+            // Prepare the MediaSource. :)
+            MediaSource mediaSource = new ExtractorMediaSource(Uri.parse(currentUrl),
+                    mediaDataSourceFactory, extractorsFactory, null, null);
+            mExoPlayer.seekTo(currentMediaPlayerPosition);
+            mExoPlayer.prepare(mediaSource);
+            mExoPlayer.setPlayWhenReady(true);
+
+        }
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (Util.ObjectisNotNull(outState) && Util.ObjectisNotNull(mExoPlayer)) {
+            outState.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) steps);
+            outState.putInt("position", position);
+            outState.putString("currentUrl", currentUrl);
+            currentMediaPlayerPosition = mExoPlayer.getCurrentPosition();
+            outState.putLong("currentMediaPosition", currentMediaPlayerPosition);
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState != null) {
+            steps = savedInstanceState.getParcelableArrayList("list");
+            position = savedInstanceState.getInt("position");
+            initializePlayer(savedInstanceState);
+        }
+    }
+
+    public void release() {
         mExoPlayer.stop();
         mExoPlayer.release();
         mExoPlayer = null;
