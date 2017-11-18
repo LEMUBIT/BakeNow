@@ -1,8 +1,12 @@
 package com.lemuel.lemubit.bakenow;
 
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Parcelable;
+import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.devbrackets.android.exomedia.ui.widget.VideoView;
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -57,6 +62,7 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
     TextView stepsLBL;
     @BindView(R.id.ToolBar_Recipe_Title)
     TextView ToolBarTitle;
+
     SimpleExoPlayerView videoView;
     TextView instructionTXT;
     Toast toast;
@@ -64,6 +70,8 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
     private boolean mTwoPane;
     List<Recipe> recipes = new ArrayList<>();
 
+
+    private Boolean paused = false;
     private int playerState = 0;
     private SimpleExoPlayer mExoPlayer;
     private Timeline.Window window;
@@ -72,13 +80,20 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
     private BandwidthMeter bandwidthMeter;
     private DataSource.Factory mediaDataSourceFactory;
 
+
+    private Long currentMediaPlayerPosition;
+    private String currentUrl;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
         ButterKnife.bind(this);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        if(this.getResources().getConfiguration().orientation== Configuration.ORIENTATION_PORTRAIT) {
+            ActionBar actionBar = getSupportActionBar();
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
 
         //////////////////
         shouldAutoPlay = true;
@@ -99,7 +114,9 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
         ingredientsLBL.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_assignment_black_24dp, 0, 0, 0);
         stepsLBL.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_done_all_black_24dp, 0, 0, 0);
 
-        ToolBarTitle.setText(recipes.get(position).getName());
+        if(this.getResources().getConfiguration().orientation== Configuration.ORIENTATION_PORTRAIT) {
+            ToolBarTitle.setText(recipes.get(position).getName());
+        }
 
         //check if it is the Two Fragment layout for Large screens
         if (findViewById(R.id.videoDetailLayout) != null) {
@@ -112,6 +129,7 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
         } else {
             mTwoPane = false;
         }
+
         IngredientsFragment ingredientsFrag = new IngredientsFragment();
         Bundle b = new Bundle();
         b.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) recipes);
@@ -136,8 +154,13 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) recipes);
-        outState.putInt("position", position);
+        if(Util.ObjectisNotNull(outState) && Util.ObjectisNotNull(mExoPlayer)) {
+            outState.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) recipes);
+            outState.putInt("position", position);
+            outState.putString("currentUrl", currentUrl);
+            currentMediaPlayerPosition = mExoPlayer.getCurrentPosition();
+            outState.putLong("currentMediaPosition", currentMediaPlayerPosition);
+        }
     }
 
     @Override
@@ -146,6 +169,7 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
         if (savedInstanceState != null) {
             recipes = savedInstanceState.getParcelableArrayList("list");
             position = savedInstanceState.getInt("position");
+            setupVideoView(savedInstanceState);
         }
     }
 
@@ -154,26 +178,28 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
         Bundle s = new Bundle();
         if (mTwoPane) {
             String instruction = steps.get(stepPosition).getDescription();
-            String videoURL = steps.get(stepPosition).getVideoURL();
-            String thumbnailURL = steps.get(stepPosition).getThumbnailURL();
+            //String videoURL = steps.get(stepPosition).getVideoURL();
+            String videoURL = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";
+            //String thumbnailURL = steps.get(stepPosition).getThumbnailURL();
+            String thumbnailURL = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";
             if (Util.StringNotEmpty(instruction)) {
                 instructionTXT.setText(instruction);
             }
 
             if (Util.StringNotEmpty(videoURL)) {
-                if (playerState == mExoPlayer.STATE_READY)
-                    release();
+//                if (playerState == mExoPlayer.STATE_READY)
+                release();
                 videoView.setVisibility(View.VISIBLE);
                 imageView.setVisibility(View.INVISIBLE);
                 setupVideoView(videoURL);
             } else if (Util.StringNotEmpty(thumbnailURL)) {
-                if (playerState == mExoPlayer.STATE_READY)
-                    release();
+//                if (playerState == mExoPlayer.STATE_READY)
+                release();
                 setupVideoView(thumbnailURL);
             } else {
                 toast.show();
-                if (playerState == mExoPlayer.STATE_READY)
-                    release();
+//                if (playerState == mExoPlayer.STATE_READY)
+                release();
                 videoView.setVisibility(View.INVISIBLE);
                 imageView.setVisibility(View.VISIBLE);
             }
@@ -191,6 +217,7 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
 
         if (mExoPlayer == null) {
             // Create an instance of the ExoPlayer.
+            currentUrl = url;
             TrackSelector trackSelector = new DefaultTrackSelector();
             LoadControl loadControl = new DefaultLoadControl();
             mExoPlayer = ExoPlayerFactory.newSimpleInstance(this, trackSelector, loadControl);
@@ -202,8 +229,56 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
                     mediaDataSourceFactory, extractorsFactory, null, null);
             mExoPlayer.prepare(mediaSource);
             mExoPlayer.setPlayWhenReady(true);
+
+        }
+
+
+    }
+
+    private void setupVideoView(Bundle savedInstanceState) {
+
+        if (mExoPlayer == null) {
+            // Create an instance of the ExoPlayer.
+            currentUrl = savedInstanceState.getString("currentUrl");
+            currentMediaPlayerPosition = savedInstanceState.getLong("currentMediaPosition");
+            TrackSelector trackSelector = new DefaultTrackSelector();
+            LoadControl loadControl = new DefaultLoadControl();
+            mExoPlayer = ExoPlayerFactory.newSimpleInstance(this, trackSelector, loadControl);
+            videoView.setPlayer(mExoPlayer);
+            // Prepare the MediaSource.
+            ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
+            // Prepare the MediaSource. :)
+            MediaSource mediaSource = new ExtractorMediaSource(Uri.parse(currentUrl),
+                    mediaDataSourceFactory, extractorsFactory, null, null);
+            mExoPlayer.seekTo(currentMediaPlayerPosition);
+            mExoPlayer.prepare(mediaSource);
+            mExoPlayer.setPlayWhenReady(true);
+
+        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mExoPlayer != null) {
+            mExoPlayer.seekTo(currentMediaPlayerPosition);
+            mExoPlayer.setPlayWhenReady(true);
+            if (Util.StringNotEmpty(currentUrl)) {
+                mExoPlayer.setPlayWhenReady(true);
+            }
         }
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mExoPlayer != null) {
+            mExoPlayer.setPlayWhenReady(false);
+        }
+
+    }
+
 
     @Override
     protected void onDestroy() {
@@ -213,9 +288,11 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
     }
 
     public void release() {
-        mExoPlayer.stop();
-        mExoPlayer.release();
-        mExoPlayer = null;
+        if (mExoPlayer != null) {
+            mExoPlayer.stop();
+            mExoPlayer.release();
+            mExoPlayer = null;
+        }
     }
 
     @Override

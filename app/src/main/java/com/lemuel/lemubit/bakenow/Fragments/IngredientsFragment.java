@@ -1,5 +1,6 @@
 package com.lemuel.lemubit.bakenow.Fragments;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -24,7 +25,7 @@ import java.util.List;
  */
 
 public class IngredientsFragment extends Fragment {
-    int position;
+    int position=0;
     List<Recipe> mRecipes = new ArrayList<>();
     List<Ingredients> mIngredients = new ArrayList<>();
 
@@ -45,12 +46,15 @@ public class IngredientsFragment extends Fragment {
                 position = savedInstanceState.getInt("position");
             }
 
-            mIngredients = mRecipes.get(position).getIngredients();
+            if(this.getResources().getConfiguration().orientation== Configuration.ORIENTATION_PORTRAIT) {
 
-            for (int i = 0; i < mIngredients.size(); i++) {
-                ingredients.append("-- " + mIngredients.get(i).getQuantity() + " "
-                        + Util.Plural(mIngredients.get(i).getQuantity(), mIngredients.get(i).getMeasure())
-                        + " of " + mIngredients.get(i).getIngredient() + " \n");
+                mIngredients = mRecipes.get(position).getIngredients();
+
+                for (int i = 0; i < mIngredients.size(); i++) {
+                    ingredients.append("-- " + mIngredients.get(i).getQuantity() + " "
+                            + Util.Plural(mIngredients.get(i).getQuantity(), mIngredients.get(i).getMeasure())
+                            + " of " + mIngredients.get(i).getIngredient() + " \n");
+                }
             }
         }
 
