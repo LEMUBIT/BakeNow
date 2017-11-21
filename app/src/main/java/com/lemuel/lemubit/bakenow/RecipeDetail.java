@@ -165,9 +165,7 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
             outState.putLong("currentMediaPosition", currentMediaPlayerPosition);
             getSupportFragmentManager().putFragment(outState, "stepDescription", stepDescriptionFragment);
             getSupportFragmentManager().putFragment(outState, "ingredientsFragm", ingredientsFrag);
-        }
-        else if(Util.ObjectisNotNull(outState) && !mTwoPane)
-        {
+        } else if (Util.ObjectisNotNull(outState) && !mTwoPane) {
             outState.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) recipes);
             outState.putInt("position", position);
             getSupportFragmentManager().putFragment(outState, "stepDescription", stepDescriptionFragment);
@@ -185,8 +183,25 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
                     getSupportFragmentManager().getFragment(savedInstanceState, "stepDescription");
             ingredientsFrag = (IngredientsFragment)
                     getSupportFragmentManager().getFragment(savedInstanceState, "ingredientsFragm");
-            if(mTwoPane) {
+            if (mTwoPane) {
                 setupVideoView(savedInstanceState);
+            }
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (mTwoPane) {
+            if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                if (getSupportActionBar() != null) {
+                    getSupportActionBar().hide();
+                }
+            } else {
+                //To show the action bar
+                if (getSupportActionBar() != null) {
+                    getSupportActionBar().show();
+                }
             }
         }
     }

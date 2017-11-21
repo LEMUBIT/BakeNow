@@ -44,7 +44,7 @@ public class StepDescriptionFragment extends Fragment {
                 mRecipes = bundle.getParcelableArrayList("list");
                 position = bundle.getInt("position");
                 mSteps = mRecipes.get(position).getSteps();//todo CRASHES WHEN ROTATED
-                Toast.makeText(getActivity(), "Recipes:"+String.valueOf(mRecipes.size()), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Recipes:"+String.valueOf(mRecipes.size()), Toast.LENGTH_SHORT).show();//todo remove test
                 Toast.makeText(getActivity(), "position:"+String.valueOf(position), Toast.LENGTH_SHORT).show();
             } else {
 

@@ -209,7 +209,7 @@ public class RecipeStepDetail extends AppCompatActivity implements
         if (mExoPlayer == null) {
             // Create an instance of the ExoPlayer.
             currentUrl = savedInstanceState.getString("currentUrl");
-            Toast.makeText(this, "current:" + String.valueOf(currentMediaPlayerPosition), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "current:" + String.valueOf(currentMediaPlayerPosition), Toast.LENGTH_SHORT).show();//todo remove test
             TrackSelector trackSelector = new DefaultTrackSelector();
             LoadControl loadControl = new DefaultLoadControl();
             mExoPlayer = ExoPlayerFactory.newSimpleInstance(this, trackSelector, loadControl);
