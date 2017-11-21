@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.lemuel.lemubit.bakenow.Adapter.StepDescriptionAdapter;
 import com.lemuel.lemubit.bakenow.Models.Recipe;
@@ -43,6 +44,8 @@ public class StepDescriptionFragment extends Fragment {
                 mRecipes = bundle.getParcelableArrayList("list");
                 position = bundle.getInt("position");
                 mSteps = mRecipes.get(position).getSteps();//todo CRASHES WHEN ROTATED
+                Toast.makeText(getActivity(), "Recipes:"+String.valueOf(mRecipes.size()), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "position:"+String.valueOf(position), Toast.LENGTH_SHORT).show();
             } else {
 
                 mSteps = savedInstanceState.getParcelableArrayList("list");

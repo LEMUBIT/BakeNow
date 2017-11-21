@@ -71,13 +71,12 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
     List<Recipe> recipes = new ArrayList<>();
 
 
-
     private int playerState = 0;
     private SimpleExoPlayer mExoPlayer;
     private BandwidthMeter bandwidthMeter;
     private DataSource.Factory mediaDataSourceFactory;
-
-
+    StepDescriptionFragment stepDescriptionFragment;
+    IngredientsFragment ingredientsFrag;
     private Long currentMediaPlayerPosition;
     private String currentUrl;
 
@@ -94,7 +93,9 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
         //////////////////
         bandwidthMeter = new DefaultBandwidthMeter();
         //got Assistance from https://github.com/yusufcakmak/ExoPlayerSample
-        mediaDataSourceFactory = new DefaultDataSourceFactory(this, com.google.android.exoplayer2.util.Util.getUserAgent(this, "mediaPlayerSample"), (TransferListener<? super DataSource>) bandwidthMeter);
+        mediaDataSourceFactory = new DefaultDataSourceFactory(this,
+                com.google.android.exoplayer2.util.Util.getUserAgent(this, "mediaPlayerSample"),
+                (TransferListener<? super DataSource>) bandwidthMeter);
         ////////////////////
 
         toast = Toast.makeText(this, R.string.NoVideo, Toast.LENGTH_SHORT);
@@ -110,6 +111,7 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
 
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             ToolBarTitle.setText(recipes.get(position).getName());
+            //  this.setTitle(recipes.get(position).getName());
         }
 
         //check if it is the Two Fragment layout for Large screens
@@ -124,27 +126,29 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
             mTwoPane = false;
         }
 
+        if (savedInstanceState == null) {
+            ingredientsFrag = new IngredientsFragment();
+            Bundle b = new Bundle();
+            b.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) recipes);
+            b.putInt("position", position);
+            ingredientsFrag.setArguments(b);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.FRGingredients, ingredientsFrag)
+                    .commit();
 
-        IngredientsFragment ingredientsFrag = new IngredientsFragment();
-        Bundle b = new Bundle();
-        b.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) recipes);
-        b.putInt("position", position);
-        ingredientsFrag.setArguments(b);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.FRGingredients, ingredientsFrag)
-                .commit();
+            stepDescriptionFragment = new StepDescriptionFragment();
+            Bundle d = new Bundle();
+            d.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) recipes);
+            d.putInt("position", position);
+            stepDescriptionFragment.setArguments(d);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.FRGdescription, stepDescriptionFragment)
+                    .commit();
+        }
 
-        StepDescriptionFragment stepDescriptionFragment = new StepDescriptionFragment();
-        Bundle d = new Bundle();
-        d.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) recipes);
-        d.putInt("position", position);
-        stepDescriptionFragment.setArguments(d);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.FRGdescription, stepDescriptionFragment)
-                .commit();
-        if (Util.ObjectisNull(currentUrl) && Util.firstRun==true && Util.isLargeScreen(RecipeDetail.this)) {
+        if (Util.ObjectisNull(currentUrl) && Util.firstRun == true && mTwoPane) {
             currentMediaPlayerPosition = 0L;
-            Util.firstRun=false;
+            Util.firstRun = false;
             onStepSelected(0, recipes.get(position).getSteps());
         }
 
@@ -159,6 +163,15 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
             outState.putString("currentUrl", currentUrl);
             currentMediaPlayerPosition = mExoPlayer.getCurrentPosition();
             outState.putLong("currentMediaPosition", currentMediaPlayerPosition);
+            getSupportFragmentManager().putFragment(outState, "stepDescription", stepDescriptionFragment);
+            getSupportFragmentManager().putFragment(outState, "ingredientsFragm", ingredientsFrag);
+        }
+        else if(Util.ObjectisNotNull(outState) && !mTwoPane)
+        {
+            outState.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) recipes);
+            outState.putInt("position", position);
+            getSupportFragmentManager().putFragment(outState, "stepDescription", stepDescriptionFragment);
+            getSupportFragmentManager().putFragment(outState, "ingredientsFragm", ingredientsFrag);
         }
     }
 
@@ -168,7 +181,13 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
         if (savedInstanceState != null) {
             recipes = savedInstanceState.getParcelableArrayList("list");
             position = savedInstanceState.getInt("position");
-            setupVideoView(savedInstanceState);
+            stepDescriptionFragment = (StepDescriptionFragment)
+                    getSupportFragmentManager().getFragment(savedInstanceState, "stepDescription");
+            ingredientsFrag = (IngredientsFragment)
+                    getSupportFragmentManager().getFragment(savedInstanceState, "ingredientsFragm");
+            if(mTwoPane) {
+                setupVideoView(savedInstanceState);
+            }
         }
     }
 
@@ -262,7 +281,7 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
         super.onResume();
         if (mExoPlayer != null) {
             mExoPlayer.seekTo(currentMediaPlayerPosition);
-           // mExoPlayer.setPlayWhenReady(true);
+            // mExoPlayer.setPlayWhenReady(true);
             if (Util.StringNotEmpty(currentUrl)) {
                 mExoPlayer.setPlayWhenReady(true);
             }
@@ -285,7 +304,7 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
         if (mTwoPane) {
             release();
             //reset variable firstRun
-            Util.firstRun=true;
+            Util.firstRun = true;
         }
     }
 

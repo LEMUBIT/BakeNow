@@ -72,7 +72,8 @@ public class RecipeStepDetail extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_step_detail);
         ButterKnife.bind(this);
-
+        ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
         //////////////////
         bandwidthMeter = new DefaultBandwidthMeter();
         mediaDataSourceFactory = new DefaultDataSourceFactory
@@ -90,7 +91,6 @@ public class RecipeStepDetail extends AppCompatActivity implements
         instruction = steps.get(position).getDescription();
         // String videoURL = steps.get(position).getVideoURL();
         // String thumbnailURL = steps.get(position).getThumbnailURL();
-        //TODO test if working for 5inch
         String thumbnailURL = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"; //URL USED FOR TESTING
         String videoURL = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"; //URL USED FOR TESTING
         toast = Toast.makeText(this, R.string.NoVideo, Toast.LENGTH_SHORT);
@@ -200,7 +200,7 @@ public class RecipeStepDetail extends AppCompatActivity implements
                     mediaDataSourceFactory, extractorsFactory, null, null);
             mExoPlayer.prepare(mediaSource);
             mExoPlayer.setPlayWhenReady(true);
-            currentMediaPlayerPosition=mExoPlayer.getCurrentPosition();
+            currentMediaPlayerPosition = mExoPlayer.getCurrentPosition();
         }
     }
 
@@ -231,12 +231,12 @@ public class RecipeStepDetail extends AppCompatActivity implements
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (Util.ObjectisNotNull(outState) && Util.ObjectisNotNull(mExoPlayer)) {
-        outState.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) steps);
-        outState.putInt("position", position);
-        outState.putString("currentUrl", currentUrl);
-        outState.putInt("currentPosition", currentPosition);
-        currentMediaPlayerPosition = mExoPlayer.getCurrentPosition();
-        outState.putLong("currentMediaPosition", currentMediaPlayerPosition);
+            outState.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) steps);
+            outState.putInt("position", position);
+            outState.putString("currentUrl", currentUrl);
+            outState.putInt("currentPosition", currentPosition);
+            currentMediaPlayerPosition = mExoPlayer.getCurrentPosition();
+            outState.putLong("currentMediaPosition", currentMediaPlayerPosition);
         }
     }
 
@@ -244,19 +244,18 @@ public class RecipeStepDetail extends AppCompatActivity implements
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         if (savedInstanceState != null) {
-        steps = savedInstanceState.getParcelableArrayList("list");
-        position = savedInstanceState.getInt("position");
-        currentPosition = savedInstanceState.getInt("currentPosition");
-        initializePlayer(savedInstanceState);
+            steps = savedInstanceState.getParcelableArrayList("list");
+            position = savedInstanceState.getInt("position");
+            currentPosition = savedInstanceState.getInt("currentPosition");
+            initializePlayer(savedInstanceState);
         }
     }
-
 
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (mExoPlayer != null && currentMediaPlayerPosition!=0) {
+        if (mExoPlayer != null && currentMediaPlayerPosition != 0) {
             mExoPlayer.seekTo(currentMediaPlayerPosition);
             mExoPlayer.setPlayWhenReady(true);
             if (Util.StringNotEmpty(currentUrl)) {
@@ -264,7 +263,7 @@ public class RecipeStepDetail extends AppCompatActivity implements
             }
         }
 
-        //todo //latest: not resuming paused after pausing
+        //todo  not resuming paused after pausing
     }
 
     @Override

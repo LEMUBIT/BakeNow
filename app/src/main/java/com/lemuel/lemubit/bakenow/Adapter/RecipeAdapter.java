@@ -64,7 +64,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         }
         else
         {
-            return 0;//todo test this place
+            return 0;
         }
     }
 

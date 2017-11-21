@@ -20,9 +20,12 @@
         </activity>
         <activity
             android:name=".RecipeDetail"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:launchMode="singleTop"
+            />
         <activity
             android:name=".RecipeStepDetail"
+            android:parentActivityName=".RecipeDetail"
            ></activity>
     </application>
 

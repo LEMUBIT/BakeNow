@@ -16,7 +16,7 @@ import com.lemuel.lemubit.bakenow.MainActivity;
 public class Util {
 
     //checks if activity was just run
-   public static Boolean firstRun=true;//TODO works to start from first video on two pane....continue from here
+   public static Boolean firstRun=true;
 
     @NonNull
     public static Boolean emptyString(String value) {
