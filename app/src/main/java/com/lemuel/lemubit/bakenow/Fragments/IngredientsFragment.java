@@ -46,7 +46,8 @@ public class IngredientsFragment extends Fragment {
                 position = savedInstanceState.getInt("position");
             }
 
-            if(this.getResources().getConfiguration().orientation== Configuration.ORIENTATION_PORTRAIT) {
+            //if its Portrait for large screens or if it is a smaller screen, then show
+            if(this.getResources().getConfiguration().orientation== Configuration.ORIENTATION_PORTRAIT || Util.isSmallScreen(getActivity())) {
 
                 mIngredients = mRecipes.get(position).getIngredients();
 

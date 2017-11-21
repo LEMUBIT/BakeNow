@@ -88,6 +88,7 @@ public class RecipeStepDetail extends AppCompatActivity implements
             position = savedInstanceState.getInt("position");
         }
         currentPosition = position;
+        currentMediaPlayerPosition = 0L;
         instruction = steps.get(position).getDescription();
         // String videoURL = steps.get(position).getVideoURL();
         // String thumbnailURL = steps.get(position).getThumbnailURL();
@@ -200,7 +201,7 @@ public class RecipeStepDetail extends AppCompatActivity implements
                     mediaDataSourceFactory, extractorsFactory, null, null);
             mExoPlayer.prepare(mediaSource);
             mExoPlayer.setPlayWhenReady(true);
-            currentMediaPlayerPosition = mExoPlayer.getCurrentPosition();
+           // currentMediaPlayerPosition = mExoPlayer.getCurrentPosition();
         }
     }
 
@@ -209,6 +210,7 @@ public class RecipeStepDetail extends AppCompatActivity implements
         if (mExoPlayer == null) {
             // Create an instance of the ExoPlayer.
             currentUrl = savedInstanceState.getString("currentUrl");
+            currentMediaPlayerPosition = savedInstanceState.getLong("currentMediaPosition");
             Toast.makeText(this, "current:" + String.valueOf(currentMediaPlayerPosition), Toast.LENGTH_SHORT).show();//todo remove test
             TrackSelector trackSelector = new DefaultTrackSelector();
             LoadControl loadControl = new DefaultLoadControl();
@@ -247,6 +249,7 @@ public class RecipeStepDetail extends AppCompatActivity implements
             steps = savedInstanceState.getParcelableArrayList("list");
             position = savedInstanceState.getInt("position");
             currentPosition = savedInstanceState.getInt("currentPosition");
+            currentMediaPlayerPosition = savedInstanceState.getLong("currentMediaPosition");
             initializePlayer(savedInstanceState);
         }
     }
@@ -255,7 +258,7 @@ public class RecipeStepDetail extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        if (mExoPlayer != null && currentMediaPlayerPosition != 0) {
+        if (mExoPlayer != null) {
             mExoPlayer.seekTo(currentMediaPlayerPosition);
             mExoPlayer.setPlayWhenReady(true);
             if (Util.StringNotEmpty(currentUrl)) {
@@ -270,6 +273,7 @@ public class RecipeStepDetail extends AppCompatActivity implements
     protected void onPause() {
         super.onPause();
         if (mExoPlayer != null) {
+
             mExoPlayer.setPlayWhenReady(false);
         }
 

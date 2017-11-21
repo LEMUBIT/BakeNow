@@ -75,6 +75,23 @@ public class Util {
     }
 
     @NonNull
+    public static Boolean isSmallScreen(Activity context) {
+        //CALCULATE SCREEN SIZE, IN THIS CASE MEDIUM SCREENS ARE >=600
+        DisplayMetrics metrics = new DisplayMetrics();
+        context.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        int widthPixels = metrics.widthPixels;
+        int heightPixels = metrics.heightPixels;
+        float scaleFactor = metrics.density;
+        float widthDp = widthPixels / scaleFactor;
+        float heightDp = heightPixels / scaleFactor;
+        float smallestWidth = Math.min(widthDp, heightDp);
+        if (smallestWidth < 600) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    @NonNull
     public static Boolean ObjectisNull(Object value) {
         if (value == null) {
             return true;
