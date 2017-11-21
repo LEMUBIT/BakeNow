@@ -16,7 +16,7 @@ import com.lemuel.lemubit.bakenow.MainActivity;
 public class Util {
 
     //checks if activity was just run
-   public static Boolean firstRun=true;
+   public static Boolean firstRun=true;//TODO works to start from first video on two pane....continue from here
 
     @NonNull
     public static Boolean emptyString(String value) {
@@ -115,9 +115,6 @@ public class Util {
         }
     }
 
-//    public static void ShowVideoNotAvailable(Context context)
-//    {
-//        Toast.makeText(context, "Video Not Available!", Toast.LENGTH_LONG).show();
-//    }
+
 
 }

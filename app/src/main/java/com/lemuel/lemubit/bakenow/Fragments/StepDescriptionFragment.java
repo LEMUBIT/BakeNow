@@ -42,7 +42,7 @@ public class StepDescriptionFragment extends Fragment {
             if (Util.ObjectisNull(savedInstanceState)) {
                 mRecipes = bundle.getParcelableArrayList("list");
                 position = bundle.getInt("position");
-                mSteps = mRecipes.get(position).getSteps();
+                mSteps = mRecipes.get(position).getSteps();//todo CRASHES WHEN ROTATED
             } else {
 
                 mSteps = savedInstanceState.getParcelableArrayList("list");
@@ -67,6 +67,7 @@ public class StepDescriptionFragment extends Fragment {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) mSteps);
         outState.putInt("position", position);
+        outState.putParcelableArrayList("recipeList",(ArrayList<? extends Parcelable>) mRecipes);
     }
 
     @Override
@@ -75,6 +76,7 @@ public class StepDescriptionFragment extends Fragment {
         if (savedInstanceState != null) {
             mSteps = savedInstanceState.getParcelableArrayList("list");
             position = savedInstanceState.getInt("position");
+            mRecipes= savedInstanceState.getParcelableArrayList("recipeList");
         }
     }
 }

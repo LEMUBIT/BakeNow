@@ -71,12 +71,9 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
     List<Recipe> recipes = new ArrayList<>();
 
 
-    private Boolean paused = false;
+
     private int playerState = 0;
     private SimpleExoPlayer mExoPlayer;
-    private Timeline.Window window;
-    private DefaultTrackSelector trackSelector;
-    private boolean shouldAutoPlay;
     private BandwidthMeter bandwidthMeter;
     private DataSource.Factory mediaDataSourceFactory;
 
@@ -95,11 +92,9 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
         }
 
         //////////////////
-        shouldAutoPlay = true;
         bandwidthMeter = new DefaultBandwidthMeter();
         //got Assistance from https://github.com/yusufcakmak/ExoPlayerSample
         mediaDataSourceFactory = new DefaultDataSourceFactory(this, com.google.android.exoplayer2.util.Util.getUserAgent(this, "mediaPlayerSample"), (TransferListener<? super DataSource>) bandwidthMeter);
-        window = new Timeline.Window();
         ////////////////////
 
         toast = Toast.makeText(this, R.string.NoVideo, Toast.LENGTH_SHORT);
@@ -147,7 +142,7 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.FRGdescription, stepDescriptionFragment)
                 .commit();
-        if (Util.ObjectisNull(currentUrl) && Util.firstRun==true) {
+        if (Util.ObjectisNull(currentUrl) && Util.firstRun==true && Util.isLargeScreen(RecipeDetail.this)) {
             currentMediaPlayerPosition = 0L;
             Util.firstRun=false;
             onStepSelected(0, recipes.get(position).getSteps());
@@ -267,7 +262,7 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
         super.onResume();
         if (mExoPlayer != null) {
             mExoPlayer.seekTo(currentMediaPlayerPosition);
-            mExoPlayer.setPlayWhenReady(true);
+           // mExoPlayer.setPlayWhenReady(true);
             if (Util.StringNotEmpty(currentUrl)) {
                 mExoPlayer.setPlayWhenReady(true);
             }
