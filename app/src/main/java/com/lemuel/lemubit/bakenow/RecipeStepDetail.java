@@ -211,7 +211,6 @@ public class RecipeStepDetail extends AppCompatActivity implements
             // Create an instance of the ExoPlayer.
             currentUrl = savedInstanceState.getString("currentUrl");
             currentMediaPlayerPosition = savedInstanceState.getLong("currentMediaPosition");
-            Toast.makeText(this, "current:" + String.valueOf(currentMediaPlayerPosition), Toast.LENGTH_SHORT).show();//todo remove test
             TrackSelector trackSelector = new DefaultTrackSelector();
             LoadControl loadControl = new DefaultLoadControl();
             mExoPlayer = ExoPlayerFactory.newSimpleInstance(this, trackSelector, loadControl);
@@ -266,7 +265,7 @@ public class RecipeStepDetail extends AppCompatActivity implements
             }
         }
 
-        //todo  not resuming paused after pausing
+        //todo :: check if not resuming paused after pausing
     }
 
     @Override

@@ -43,11 +43,9 @@ public class StepDescriptionFragment extends Fragment {
             if (Util.ObjectisNull(savedInstanceState)) {
                 mRecipes = bundle.getParcelableArrayList("list");
                 position = bundle.getInt("position");
-                mSteps = mRecipes.get(position).getSteps();//todo CRASHES WHEN ROTATED
-                Toast.makeText(getActivity(), "Recipes:"+String.valueOf(mRecipes.size()), Toast.LENGTH_SHORT).show();//todo remove test
-                Toast.makeText(getActivity(), "position:"+String.valueOf(position), Toast.LENGTH_SHORT).show();
+                mSteps = mRecipes.get(position).getSteps();
             } else {
-
+                //use savedInstanceState if not null
                 mSteps = savedInstanceState.getParcelableArrayList("list");
                 position = savedInstanceState.getInt("position");
             }

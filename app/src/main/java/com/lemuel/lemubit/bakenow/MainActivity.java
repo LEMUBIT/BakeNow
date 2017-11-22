@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     Parcelable mListState;
     RecyclerView.LayoutManager mLayoutManager;
     RecipeAdapter recipeAdapter;
-    static List<Recipe> recipes;
+    public static List<Recipe> recipes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         loadRecipe(savedInstanceState);
         loadAppropriateLayout();
+
     }
 
     @Override

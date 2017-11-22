@@ -18,6 +18,7 @@ public class Util {
     //checks if activity was just run
    public static Boolean firstRun=true;
 
+    //check if a string is empty or null
     @NonNull
     public static Boolean emptyString(String value) {
         if (value.isEmpty() || value.length() < 1 || value == null || value == "") {
@@ -28,6 +29,7 @@ public class Util {
 
     }
 
+    //check if a String is neither empty nor null
     @NonNull
     public static Boolean StringNotEmpty(String value) {
         if (value.isEmpty() || value.length() < 1 || value == null || value == "") {
@@ -38,6 +40,7 @@ public class Util {
 
     }
 
+    //check if it's a large screen >=700DP
     @NonNull
     public static Boolean isLargeScreen(Activity context) {
         //CALCULATE SCREEN SIZE, IN THIS CASE LARGE SCREENS ARE >700
@@ -56,6 +59,7 @@ public class Util {
         }
     }
 
+    //check if it's a medium sized screen >=600DP
     @NonNull
     public static Boolean isMediumScreen(Activity context) {
         //CALCULATE SCREEN SIZE, IN THIS CASE MEDIUM SCREENS ARE >=600
@@ -74,6 +78,7 @@ public class Util {
         }
     }
 
+    //check if it's a smaller phone screen <600
     @NonNull
     public static Boolean isSmallScreen(Activity context) {
         //CALCULATE SCREEN SIZE, IN THIS CASE MEDIUM SCREENS ARE >=600
@@ -91,6 +96,8 @@ public class Util {
             return false;
         }
     }
+
+    //Check if a object is null
     @NonNull
     public static Boolean ObjectisNull(Object value) {
         if (value == null) {
@@ -100,6 +107,7 @@ public class Util {
         }
     }
 
+    //Check if a object is not null
     @NonNull
     public static Boolean ObjectisNotNull(Object value) {
         if (value == null) {
@@ -109,6 +117,7 @@ public class Util {
         }
     }
 
+    //Check if a Recipe ingredient is more than one
     public static String Plural(Double quantity, String measure) {
         if (quantity <= 1.0) {
             return measure;
@@ -120,6 +129,7 @@ public class Util {
         }
     }
 
+    //Check if device is in Portrait mode
     public static Boolean isPortraitMode(int orientation)
     {
         if(orientation== Configuration.ORIENTATION_PORTRAIT)

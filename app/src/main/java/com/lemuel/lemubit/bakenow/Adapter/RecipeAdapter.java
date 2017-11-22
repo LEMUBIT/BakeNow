@@ -1,9 +1,13 @@
 package com.lemuel.lemubit.bakenow.Adapter;
 
 import android.annotation.TargetApi;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,10 +18,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.lemuel.lemubit.bakenow.MainActivity;
 import com.lemuel.lemubit.bakenow.Models.Recipe;
 import com.lemuel.lemubit.bakenow.R;
 import com.lemuel.lemubit.bakenow.RecipeDetail;
 import com.lemuel.lemubit.bakenow.Utils.Util;
+import com.lemuel.lemubit.bakenow.Widget.RecipeWidgetProvider;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -85,7 +92,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
                     public boolean onTouch(View view, MotionEvent motionEvent) {
                         view.findViewById(R.id.recipeLYT).getBackground().setHotspot(motionEvent.getX(), motionEvent.getY());
 
-
                         return false;
                     }
                 });
@@ -94,7 +100,22 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
         @Override
         public void onClick(View view) {
-            //    Toast.makeText(context, "Name:" + recipes.get(getAdapterPosition()).getName(), Toast.LENGTH_SHORT).show();
+
+            //Save Data in SharedPreference For App Widget To Access
+            Gson gson=new Gson();
+            String recipes=gson.toJson(MainActivity.recipes.get(getAdapterPosition()));
+            // int recipePosition=getAdapterPosition();
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString(context.getString(R.string.RecipePreferenceKey),recipes);
+            //editor.putInt(context.getString(R.string.PositionPreferenceKey),recipePosition);
+            editor.apply();
+            // Notify the widget that the data has changed
+            ComponentName widget = new ComponentName(context, RecipeWidgetProvider.class);
+            int[] ids = AppWidgetManager.getInstance(context).getAppWidgetIds(widget);
+            AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(ids,R.id.recipeList);
+
+            //Open the Detail Activity
             context.startActivity(new Intent(context, RecipeDetail.class).putExtra("position", getAdapterPosition()));
         }
     }

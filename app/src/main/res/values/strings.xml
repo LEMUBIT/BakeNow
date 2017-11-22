@@ -7,4 +7,8 @@
     <string name="NoVideo">Video Not Available!</string>
     <string name="next">NEXT</string>
     <string name="back">BACK</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="RecipePreferenceKey">preferredRecipe</string>
+    <string name="PositionPreferenceKey">positionOfPreferred</string>
 </resources>
