@@ -33,6 +33,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
 //        appWidgetManager.updateAppWidget(appWidgetId, views);
 //    }
 
+    //todo ::latest:widget not being updated
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
