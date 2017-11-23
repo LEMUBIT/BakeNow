@@ -10,6 +10,7 @@ import android.widget.RemoteViewsService;
 import com.lemuel.lemubit.bakenow.Models.Ingredients;
 import com.lemuel.lemubit.bakenow.Models.Recipe;
 import com.lemuel.lemubit.bakenow.R;
+import com.lemuel.lemubit.bakenow.Utils.Util;
 
 import java.util.List;
 
@@ -19,14 +20,14 @@ import java.util.List;
 
 public class RecipeViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
-    private Context context=null;
+    private Context context = null;
     private int recipeWidgetId;
-   public List<Ingredients> Ingredients;
+    public List<Ingredients> Ingredients;
 
 
     public RecipeViewsFactory(Context context, Intent intent, List<Ingredients> Ingredients) {
         this.context = context;
-        recipeWidgetId =intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
+        recipeWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                 AppWidgetManager.INVALID_APPWIDGET_ID);
         this.Ingredients = Ingredients;
     }
@@ -53,12 +54,18 @@ public class RecipeViewsFactory implements RemoteViewsService.RemoteViewsFactory
 
     @Override
     public RemoteViews getViewAt(int position) {
-        RemoteViews row= new RemoteViews
+        RemoteViews row = new RemoteViews
                 (context.getPackageName(), R.layout.recipe_list_row);
-        row.setTextViewText(R.id.recipeRow,Ingredients.get(position).getIngredient());
+        row.setTextViewText(R.id.recipeRow, Ingredients.get(position).getIngredient());
 
-        Intent i=new Intent();
-        Bundle extras=new Bundle();
+        String recipeText=Ingredients.get(position).getQuantity() + " "
+                + Util.Plural(Ingredients.get(position).getQuantity(),
+                Ingredients.get(position).getMeasure())
+                + " of " + Ingredients.get(position).getIngredient();
+
+        row.setTextViewText(R.id.recipeRow, recipeText);
+        Intent i = new Intent();
+        Bundle extras = new Bundle();
 
         extras.putString(RecipeWidgetProvider.EXTRA_WORD, Ingredients.get(position).getIngredient());
         extras.putInt(AppWidgetManager.EXTRA_APPWIDGET_ID, recipeWidgetId);

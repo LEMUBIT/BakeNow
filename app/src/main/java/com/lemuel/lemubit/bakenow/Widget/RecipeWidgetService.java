@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.widget.RemoteViewsService;
 
+
 import com.google.gson.Gson;
 import com.lemuel.lemubit.bakenow.Models.Ingredients;
 import com.lemuel.lemubit.bakenow.Models.Recipe;
@@ -23,7 +24,7 @@ public class RecipeWidgetService extends RemoteViewsService {
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         Gson gson = new Gson();
-        String recipeString = preferences.getString(getString(R.string.PositionPreferenceKey), null);
+        String recipeString = preferences.getString(getString(R.string.RecipePreferenceKey), null);
         List<Ingredients> ingredients = new ArrayList<>();
         if (recipeString != null) {
             Recipe recipe = gson.fromJson(recipeString, Recipe.class);

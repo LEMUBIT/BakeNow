@@ -265,7 +265,7 @@ public class RecipeStepDetail extends AppCompatActivity implements
             }
         }
 
-        //todo :: check if not resuming paused after pausing
+
     }
 
     @Override

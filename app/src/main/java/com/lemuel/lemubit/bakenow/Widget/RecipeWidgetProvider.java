@@ -19,26 +19,39 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
             "com.lemuel.lemubit.bakenow.Widget.WORD";
     private int[] mAppWidgetIds;
 
-//    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-//                                int appWidgetId) {
-//
-//
-//        CharSequence widgetText = context.getString(R.string.appwidget_text);
-//        // Construct the RemoteViews object
-//        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_app_widget);
-//        views.setTextViewText(R.id.appwidget_text, widgetText);
-//
-//
-//        // Instruct the widget manager to update the widget
-//        appWidgetManager.updateAppWidget(appWidgetId, views);
-//    }
+   public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
+                                int appWidgetId) {
+
+
+        Intent RcpIntent = new Intent(context, RecipeWidgetService.class);
+        RcpIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        RcpIntent.setData(Uri.parse(RcpIntent.toUri(Intent.URI_INTENT_SCHEME)));
+        RemoteViews widget = new RemoteViews(context.getPackageName(),
+                R.layout.recipe_app_widget);
+        widget.setRemoteAdapter(R.id.recipeList, RcpIntent);
+        widget.setEmptyView(R.id.recipeList, R.id.empty_view);
+        Intent clickIntent = new Intent(context, MainActivity.class);
+        PendingIntent clickList = PendingIntent
+                .getActivity(context, 0,
+                        clickIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+
+        widget.setPendingIntentTemplate(R.id.recipeList, clickList);
+        appWidgetManager.updateAppWidget(appWidgetId, widget);
+
+
+        // Instruct the widget manager to update the widget
+        appWidgetManager.updateAppWidget(appWidgetId, widget);
+    }
 
     //todo ::latest:widget not being updated
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
+
         mAppWidgetIds = appWidgetIds;
         for (int appWidgetId : appWidgetIds) {
+
             //    updateAppWidget(context, appWidgetManager, appWidgetId);
             Intent RcpIntent = new Intent(context, RecipeWidgetService.class);
             RcpIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);

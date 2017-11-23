@@ -66,11 +66,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
     @Override
     public int getItemCount() {
-        if(Util.ObjectisNotNull(recipes)) {
+        if (Util.ObjectisNotNull(recipes)) {
             return recipes.size();
-        }
-        else
-        {
+        } else {
             return 0;
         }
     }
@@ -102,18 +100,23 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         public void onClick(View view) {
 
             //Save Data in SharedPreference For App Widget To Access
-            Gson gson=new Gson();
-            String recipes=gson.toJson(MainActivity.recipes.get(getAdapterPosition()));
-            // int recipePosition=getAdapterPosition();
+            Gson gson = new Gson();
+            String recipes = gson.toJson(MainActivity.recipes.get(getAdapterPosition()));
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
             SharedPreferences.Editor editor = preferences.edit();
-            editor.putString(context.getString(R.string.RecipePreferenceKey),recipes);
-            //editor.putInt(context.getString(R.string.PositionPreferenceKey),recipePosition);
+            editor.putString(context.getString(R.string.RecipePreferenceKey), recipes);
             editor.apply();
             // Notify the widget that the data has changed
             ComponentName widget = new ComponentName(context, RecipeWidgetProvider.class);
             int[] ids = AppWidgetManager.getInstance(context).getAppWidgetIds(widget);
-            AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(ids,R.id.recipeList);
+            AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(ids, R.id.recipeList);
+            RecipeWidgetProvider.updateAppWidget(context, AppWidgetManager.getInstance(context), ids[0]);
+            //todo ::latest: check if ap will update to 400G sifted..3rd
+            //try sending broadcast (testing)
+//            Intent intent = new Intent(context, RecipeWidgetProvider.class);
+//            intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+//            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+//            context.sendBroadcast(intent);
 
             //Open the Detail Activity
             context.startActivity(new Intent(context, RecipeDetail.class).putExtra("position", getAdapterPosition()));
