@@ -22,11 +22,15 @@ public class RecipeWidgetService extends RemoteViewsService {
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
+        //get preference reference
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         Gson gson = new Gson();
+        //get saved recipe string from preference
         String recipeString = preferences.getString(getString(R.string.RecipePreferenceKey), null);
         List<Ingredients> ingredients = new ArrayList<>();
+
         if (recipeString != null) {
+            //get ingredients form string
             Recipe recipe = gson.fromJson(recipeString, Recipe.class);
             ingredients = recipe.getIngredients();
 

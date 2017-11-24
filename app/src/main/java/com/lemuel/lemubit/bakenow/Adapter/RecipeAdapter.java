@@ -109,14 +109,14 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             // Notify the widget that the data has changed
             ComponentName widget = new ComponentName(context, RecipeWidgetProvider.class);
             int[] ids = AppWidgetManager.getInstance(context).getAppWidgetIds(widget);
-            AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(ids, R.id.recipeList);
-            RecipeWidgetProvider.updateAppWidget(context, AppWidgetManager.getInstance(context), ids[0]);
-            //todo ::latest: check if ap will update to 400G sifted..3rd
+          //  AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(ids, R.id.recipeList);
+          //  RecipeWidgetProvider.updateAppWidget(context, AppWidgetManager.getInstance(context), ids[0]);
+
             //try sending broadcast (testing)
-//            Intent intent = new Intent(context, RecipeWidgetProvider.class);
-//            intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-//            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
-//            context.sendBroadcast(intent);
+            Intent intent = new Intent(context, RecipeWidgetProvider.class);
+            intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+            context.sendBroadcast(intent);
 
             //Open the Detail Activity
             context.startActivity(new Intent(context, RecipeDetail.class).putExtra("position", getAdapterPosition()));

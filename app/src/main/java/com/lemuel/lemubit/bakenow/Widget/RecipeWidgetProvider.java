@@ -19,6 +19,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
             "com.lemuel.lemubit.bakenow.Widget.WORD";
     private int[] mAppWidgetIds;
 
+    //not used currently
    public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
@@ -44,7 +45,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         appWidgetManager.updateAppWidget(appWidgetId, widget);
     }
 
-    //todo ::latest:widget not being updated
+
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
@@ -52,7 +53,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         mAppWidgetIds = appWidgetIds;
         for (int appWidgetId : appWidgetIds) {
 
-            //    updateAppWidget(context, appWidgetManager, appWidgetId);
+
             Intent RcpIntent = new Intent(context, RecipeWidgetService.class);
             RcpIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
             RcpIntent.setData(Uri.parse(RcpIntent.toUri(Intent.URI_INTENT_SCHEME)));

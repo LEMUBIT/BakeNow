@@ -3,15 +3,19 @@ package com.lemuel.lemubit.bakenow.Widget;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
+import com.google.gson.Gson;
 import com.lemuel.lemubit.bakenow.Models.Ingredients;
 import com.lemuel.lemubit.bakenow.Models.Recipe;
 import com.lemuel.lemubit.bakenow.R;
 import com.lemuel.lemubit.bakenow.Utils.Util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,7 +43,7 @@ public class RecipeViewsFactory implements RemoteViewsService.RemoteViewsFactory
 
     @Override
     public void onDataSetChanged() {
-
+     RecipeWidgetProvider.updateAppWidget(context,AppWidgetManager.getInstance(context),recipeWidgetId);
     }
 
     @Override
