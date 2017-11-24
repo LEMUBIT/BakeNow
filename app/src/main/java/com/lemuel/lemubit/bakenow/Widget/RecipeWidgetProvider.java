@@ -20,8 +20,8 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
     private int[] mAppWidgetIds;
 
     //not used currently
-   public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId) {
+    public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
+                                       int appWidgetId) {
 
 
         Intent RcpIntent = new Intent(context, RecipeWidgetService.class);
@@ -86,8 +86,11 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (mAppWidgetIds != null) {
+        mAppWidgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
+        if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
             onUpdate(context, AppWidgetManager.getInstance(context), mAppWidgetIds);
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+            appWidgetManager.notifyAppWidgetViewDataChanged(mAppWidgetIds, R.id.recipeList);
         }
         super.onReceive(context, intent);
     }

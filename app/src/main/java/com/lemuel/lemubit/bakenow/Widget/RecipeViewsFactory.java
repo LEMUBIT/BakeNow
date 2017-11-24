@@ -43,7 +43,7 @@ public class RecipeViewsFactory implements RemoteViewsService.RemoteViewsFactory
 
     @Override
     public void onDataSetChanged() {
-     RecipeWidgetProvider.updateAppWidget(context,AppWidgetManager.getInstance(context),recipeWidgetId);
+
     }
 
     @Override

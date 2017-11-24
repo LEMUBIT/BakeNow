@@ -106,13 +106,12 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             SharedPreferences.Editor editor = preferences.edit();
             editor.putString(context.getString(R.string.RecipePreferenceKey), recipes);
             editor.apply();
+
             // Notify the widget that the data has changed
             ComponentName widget = new ComponentName(context, RecipeWidgetProvider.class);
             int[] ids = AppWidgetManager.getInstance(context).getAppWidgetIds(widget);
           //  AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(ids, R.id.recipeList);
           //  RecipeWidgetProvider.updateAppWidget(context, AppWidgetManager.getInstance(context), ids[0]);
-
-            //try sending broadcast (testing)
             Intent intent = new Intent(context, RecipeWidgetProvider.class);
             intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
             intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
