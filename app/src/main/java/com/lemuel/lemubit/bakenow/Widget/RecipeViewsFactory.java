@@ -43,7 +43,18 @@ public class RecipeViewsFactory implements RemoteViewsService.RemoteViewsFactory
 
     @Override
     public void onDataSetChanged() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        Gson gson = new Gson();
+        //get saved recipe string from preference
+        String recipeString = preferences.getString(context.getString(R.string.RecipePreferenceKey), null);
+        if (recipeString != null) {
+            //get ingredients form string
+            Recipe recipe = gson.fromJson(recipeString, Recipe.class);
+            Ingredients = recipe.getIngredients();
 
+        }
+
+        RecipeWidgetProvider.updateAppWidget(context, AppWidgetManager.getInstance(context), recipeWidgetId);
     }
 
     @Override
@@ -62,7 +73,7 @@ public class RecipeViewsFactory implements RemoteViewsService.RemoteViewsFactory
                 (context.getPackageName(), R.layout.recipe_list_row);
         row.setTextViewText(R.id.recipeRow, Ingredients.get(position).getIngredient());
 
-        String recipeText=Ingredients.get(position).getQuantity() + " "
+        String recipeText = Ingredients.get(position).getQuantity() + " "
                 + Util.Plural(Ingredients.get(position).getQuantity(),
                 Ingredients.get(position).getMeasure())
                 + " of " + Ingredients.get(position).getIngredient();
