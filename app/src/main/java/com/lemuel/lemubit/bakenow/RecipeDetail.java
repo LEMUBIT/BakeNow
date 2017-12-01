@@ -97,7 +97,7 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
         bandwidthMeter = new DefaultBandwidthMeter();
         //got Assistance from https://github.com/yusufcakmak/ExoPlayerSample
         mediaDataSourceFactory = new DefaultDataSourceFactory(this,
-                com.google.android.exoplayer2.util.Util.getUserAgent(this, "mediaPlayerSample"),
+                com.google.android.exoplayer2.util.Util.getUserAgent(this, "bakenow"),
                 (TransferListener<? super DataSource>) bandwidthMeter);
         ////////////////////
 
@@ -114,13 +114,11 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
 
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             ToolBarTitle.setText(recipes.get(position).getName());
-            //  this.setTitle(recipes.get(position).getName());
         }
 
         //check if it is the Two Fragment layout for Large screens
         if (findViewById(R.id.videoDetailLayout) != null) {
-            //if it finds this layout, it means
-            // that it is the layout for large screens
+            //the layout for large screens
             mTwoPane = true;
             videoView = (SimpleExoPlayerView) findViewById(R.id.video_view);
             instructionTXT = (TextView) findViewById(R.id.InstructionTXT);
@@ -149,7 +147,7 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
                     .commit();
         }
 
-        if (Util.ObjectisNull(currentUrl) && Util.firstRun == true && mTwoPane) {
+        if (Util.ObjectisNull(currentUrl) && Util.firstRun == true && mTwoPane && Util.ObjectisNull(savedInstanceState)) {
             currentMediaPlayerPosition = 0L;
             Util.firstRun = false;
             onStepSelected(0, recipes.get(position).getSteps());
@@ -186,8 +184,10 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
                     getSupportFragmentManager().getFragment(savedInstanceState, "stepDescription");
             ingredientsFrag = (IngredientsFragment)
                     getSupportFragmentManager().getFragment(savedInstanceState, "ingredientsFragm");
+
             if (mTwoPane) {
-                setupVideoView(savedInstanceState);
+                currentMediaPlayerPosition = savedInstanceState.getLong("currentMediaPosition");
+                currentUrl=savedInstanceState.getString("currentUrl");
             }
         }
     }
@@ -214,27 +214,24 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
         Bundle s = new Bundle();
         if (mTwoPane) {
             String instruction = steps.get(stepPosition).getDescription();
-            //String videoURL = steps.get(stepPosition).getVideoURL();
-            String videoURL = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";
-            //String thumbnailURL = steps.get(stepPosition).getThumbnailURL();
-            String thumbnailURL = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";
+            String videoURL = steps.get(stepPosition).getVideoURL();
+            String thumbnailURL = steps.get(stepPosition).getThumbnailURL();
+//            String videoURL = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";//URL for testing
+//            String thumbnailURL = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";
             if (Util.StringNotEmpty(instruction)) {
                 instructionTXT.setText(instruction);
             }
 
             if (Util.StringNotEmpty(videoURL)) {
-//                if (playerState == mExoPlayer.STATE_READY)
                 release();
                 videoView.setVisibility(View.VISIBLE);
                 imageView.setVisibility(View.INVISIBLE);
                 setupVideoView(videoURL);
             } else if (Util.StringNotEmpty(thumbnailURL)) {
-//                if (playerState == mExoPlayer.STATE_READY)
                 release();
                 setupVideoView(thumbnailURL);
             } else {
                 toast.show();
-//                if (playerState == mExoPlayer.STATE_READY)
                 release();
                 videoView.setVisibility(View.INVISIBLE);
                 imageView.setVisibility(View.VISIBLE);
@@ -270,13 +267,10 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
 
 
     }
-
-    private void setupVideoView(Bundle savedInstanceState) {
+    private void setupVideoView() {
 
         if (mExoPlayer == null) {
             // Create an instance of the ExoPlayer.
-            currentUrl = savedInstanceState.getString("currentUrl");
-            currentMediaPlayerPosition = savedInstanceState.getLong("currentMediaPosition");
             TrackSelector trackSelector = new DefaultTrackSelector();
             LoadControl loadControl = new DefaultLoadControl();
             mExoPlayer = ExoPlayerFactory.newSimpleInstance(this, trackSelector, loadControl);
@@ -286,22 +280,22 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
             // Prepare the MediaSource. :)
             MediaSource mediaSource = new ExtractorMediaSource(Uri.parse(currentUrl),
                     mediaDataSourceFactory, extractorsFactory, null, null);
-            mExoPlayer.seekTo(currentMediaPlayerPosition);
             mExoPlayer.prepare(mediaSource);
             mExoPlayer.setPlayWhenReady(true);
+            mExoPlayer.seekTo(currentMediaPlayerPosition);
 
         }
+
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (mExoPlayer != null) {
-            mExoPlayer.seekTo(currentMediaPlayerPosition);
-            // mExoPlayer.setPlayWhenReady(true);
+
+        if(mTwoPane) {
             if (Util.StringNotEmpty(currentUrl)) {
-                mExoPlayer.setPlayWhenReady(true);
+                setupVideoView();
             }
         }
     }
@@ -309,10 +303,11 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
     @Override
     protected void onPause() {
         super.onPause();
-        if (mExoPlayer != null) {
-            mExoPlayer.setPlayWhenReady(false);
-        }
-
+        if (mTwoPane){
+            if (mExoPlayer != null) {
+                mExoPlayer.setPlayWhenReady(false);
+            }
+    }
     }
 
 

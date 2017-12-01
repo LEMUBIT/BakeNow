@@ -46,6 +46,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+/*
+* For smaller screens which can't display steps and detail at once
+*/
 public class RecipeStepDetail extends AppCompatActivity implements
         ExoPlayer.EventListener {
     List<Steps> steps;
@@ -74,41 +77,45 @@ public class RecipeStepDetail extends AppCompatActivity implements
         ButterKnife.bind(this);
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
-        //////////////////
+
         bandwidthMeter = new DefaultBandwidthMeter();
         mediaDataSourceFactory = new DefaultDataSourceFactory
-                (this, com.google.android.exoplayer2.util.Util.getUserAgent(this, "mediaPlayerSample"),
-                        (TransferListener<? super DataSource>) bandwidthMeter);
-        ////////////////////
+                (this, com.google.android.exoplayer2.util.Util.getUserAgent
+                        (this, "bakenow"),
+                        (TransferListener<? super DataSource>) bandwidthMeter);//todo check if it works after change
+
         if (savedInstanceState == null) {
             steps = getIntent().getExtras().getParcelableArrayList("step");
             position = getIntent().getExtras().getInt("stepPosition");
+            currentMediaPlayerPosition = 0L;
         } else {
             steps = savedInstanceState.getParcelableArrayList("list");
             position = savedInstanceState.getInt("position");
         }
         currentPosition = position;
-        currentMediaPlayerPosition = 0L;
         instruction = steps.get(position).getDescription();
-        // String videoURL = steps.get(position).getVideoURL();
-        // String thumbnailURL = steps.get(position).getThumbnailURL();
-        String thumbnailURL = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"; //URL USED FOR TESTING
-        String videoURL = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"; //URL USED FOR TESTING
+         String videoURL = steps.get(position).getVideoURL();
+         String thumbnailURL = steps.get(position).getThumbnailURL();
+
+         //Toast to be displayed if video is not available
         toast = Toast.makeText(this, R.string.NoVideo, Toast.LENGTH_SHORT);
 
+        //Check if there is an instruction for the step
         if (Util.StringNotEmpty(instruction)) {
             instructionTXT.setText(instruction);
         }
 
-        if (Util.StringNotEmpty(videoURL)) {
-            initializePlayer(videoURL);
-        } else if (Util.StringNotEmpty(thumbnailURL)) {
-            initializePlayer(thumbnailURL);
+        if(savedInstanceState==null) {
+            if (Util.StringNotEmpty(videoURL)) {
+                initializePlayer(videoURL);
+            } else if (Util.StringNotEmpty(thumbnailURL)) {
+                initializePlayer(thumbnailURL);
 
-        } else {
-            imageView.setVisibility(View.VISIBLE);
-            videoView.setVisibility(View.INVISIBLE);
-            toast.show();
+            } else {
+                imageView.setVisibility(View.VISIBLE);
+                videoView.setVisibility(View.INVISIBLE);
+                toast.show();
+            }
         }
 
     }
@@ -116,7 +123,6 @@ public class RecipeStepDetail extends AppCompatActivity implements
     @OnClick(R.id.nextBtn)
     public void next() {
         //stop playback
-        if (playerState == mExoPlayer.STATE_READY)
             release();
         //increment position
         currentPosition++;
@@ -151,7 +157,6 @@ public class RecipeStepDetail extends AppCompatActivity implements
     @OnClick(R.id.backBtn)
     public void back() {
         //stop playback
-        if (playerState == mExoPlayer.STATE_READY)
             release();
         //decrement position
         currentPosition--;
@@ -167,19 +172,16 @@ public class RecipeStepDetail extends AppCompatActivity implements
 
 
         if (Util.StringNotEmpty(videoURL)) {
-            if (playerState == mExoPlayer.STATE_READY)
-                release();
+             //   release();
             videoView.setVisibility(View.VISIBLE);
             imageView.setVisibility(View.INVISIBLE);
             initializePlayer(videoURL);
         } else if (Util.StringNotEmpty(thumbnailURL)) {
-            if (playerState == mExoPlayer.STATE_READY)
-                release();//could make the ExoPlayer null and try...video not changing
+               // release();
             initializePlayer(thumbnailURL);
         } else {
             toast.show();
-            if (playerState == mExoPlayer.STATE_READY)
-                release();
+             //   release();
             videoView.setVisibility(View.INVISIBLE);
             imageView.setVisibility(View.VISIBLE);
         }
@@ -201,16 +203,11 @@ public class RecipeStepDetail extends AppCompatActivity implements
                     mediaDataSourceFactory, extractorsFactory, null, null);
             mExoPlayer.prepare(mediaSource);
             mExoPlayer.setPlayWhenReady(true);
-           // currentMediaPlayerPosition = mExoPlayer.getCurrentPosition();
         }
     }
 
-    private void initializePlayer(Bundle savedInstanceState) {
-
-        if (mExoPlayer == null) {
+    private void initializePlayer() {
             // Create an instance of the ExoPlayer.
-            currentUrl = savedInstanceState.getString("currentUrl");
-            currentMediaPlayerPosition = savedInstanceState.getLong("currentMediaPosition");
             TrackSelector trackSelector = new DefaultTrackSelector();
             LoadControl loadControl = new DefaultLoadControl();
             mExoPlayer = ExoPlayerFactory.newSimpleInstance(this, trackSelector, loadControl);
@@ -220,11 +217,10 @@ public class RecipeStepDetail extends AppCompatActivity implements
             // Prepare the MediaSource. :)
             MediaSource mediaSource = new ExtractorMediaSource(Uri.parse(currentUrl),
                     mediaDataSourceFactory, extractorsFactory, null, null);
-            mExoPlayer.seekTo(currentMediaPlayerPosition);
             mExoPlayer.prepare(mediaSource);
             mExoPlayer.setPlayWhenReady(true);
+            mExoPlayer.seekTo(currentMediaPlayerPosition);
 
-        }
 
     }
 
@@ -248,8 +244,8 @@ public class RecipeStepDetail extends AppCompatActivity implements
             steps = savedInstanceState.getParcelableArrayList("list");
             position = savedInstanceState.getInt("position");
             currentPosition = savedInstanceState.getInt("currentPosition");
+            currentUrl=savedInstanceState.getString("currentUrl");
             currentMediaPlayerPosition = savedInstanceState.getLong("currentMediaPosition");
-            initializePlayer(savedInstanceState);
         }
     }
 
@@ -257,22 +253,17 @@ public class RecipeStepDetail extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        if (mExoPlayer != null) {
-            mExoPlayer.seekTo(currentMediaPlayerPosition);
-            mExoPlayer.setPlayWhenReady(true);
+        if(currentUrl!=null) {
             if (Util.StringNotEmpty(currentUrl)) {
-                mExoPlayer.setPlayWhenReady(true);
+                initializePlayer();
             }
         }
-
-
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         if (mExoPlayer != null) {
-
             mExoPlayer.setPlayWhenReady(false);
         }
 
