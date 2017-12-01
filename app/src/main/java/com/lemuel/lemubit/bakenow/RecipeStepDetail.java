@@ -7,6 +7,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -188,7 +189,7 @@ public class RecipeStepDetail extends AppCompatActivity implements
     }
 
     private void initializePlayer(String url) {
-
+        Log.d("initialize", "initialized!!!");
         if (mExoPlayer == null) {
             // Create an instance of the ExoPlayer.
             currentUrl = url;
@@ -227,13 +228,16 @@ public class RecipeStepDetail extends AppCompatActivity implements
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (Util.ObjectisNotNull(outState) && Util.ObjectisNotNull(mExoPlayer)) {
+        if (Util.ObjectisNotNull(outState)) {
             outState.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) steps);
             outState.putInt("position", position);
             outState.putString("currentUrl", currentUrl);
             outState.putInt("currentPosition", currentPosition);
-            currentMediaPlayerPosition = mExoPlayer.getCurrentPosition();
-            outState.putLong("currentMediaPosition", currentMediaPlayerPosition);
+            if (Util.ObjectisNotNull(mExoPlayer)) {
+                currentMediaPlayerPosition = mExoPlayer.getCurrentPosition();
+                outState.putLong("currentMediaPosition", currentMediaPlayerPosition);
+            }
+
         }
     }
 
@@ -253,6 +257,7 @@ public class RecipeStepDetail extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d("resume", "Resumed!!!");
         if (currentUrl != null) {
             if (Util.StringNotEmpty(currentUrl)) {
                 initializePlayer();
@@ -263,8 +268,10 @@ public class RecipeStepDetail extends AppCompatActivity implements
     @Override
     protected void onPause() {
         super.onPause();
+        Log.d("pause", "Paused!!!");
         if (mExoPlayer != null) {
-            release();
+            Log.d("pause", "Paused player!!!");
+            mExoPlayer.setPlayWhenReady(false);
         }
 
     }
@@ -281,6 +288,7 @@ public class RecipeStepDetail extends AppCompatActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.d("destroy","destroyed!!!");
         release();
     }
 

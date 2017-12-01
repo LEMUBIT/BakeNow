@@ -161,14 +161,17 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (Util.ObjectisNotNull(outState) && Util.ObjectisNotNull(mExoPlayer)) {
+        if (Util.ObjectisNotNull(outState) && mTwoPane) {
             outState.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) recipes);
             outState.putInt("position", position);
             outState.putString("currentUrl", currentUrl);
-            currentMediaPlayerPosition = mExoPlayer.getCurrentPosition();
-            outState.putLong("currentMediaPosition", currentMediaPlayerPosition);
             getSupportFragmentManager().putFragment(outState, "stepDescription", stepDescriptionFragment);
             getSupportFragmentManager().putFragment(outState, "ingredientsFragm", ingredientsFrag);
+            if (Util.ObjectisNotNull(mExoPlayer)) {
+                currentMediaPlayerPosition = mExoPlayer.getCurrentPosition();
+                outState.putLong("currentMediaPosition", currentMediaPlayerPosition);
+            }
+            //curUrl ="" //todo :: check
         } else if (Util.ObjectisNotNull(outState) && !mTwoPane) {
             outState.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) recipes);
             outState.putInt("position", position);
