@@ -82,7 +82,7 @@ public class RecipeStepDetail extends AppCompatActivity implements
         mediaDataSourceFactory = new DefaultDataSourceFactory
                 (this, com.google.android.exoplayer2.util.Util.getUserAgent
                         (this, "bakenow"),
-                        (TransferListener<? super DataSource>) bandwidthMeter);//todo check if it works after change
+                        (TransferListener<? super DataSource>) bandwidthMeter);
 
         if (savedInstanceState == null) {
             steps = getIntent().getExtras().getParcelableArrayList("step");
@@ -94,10 +94,10 @@ public class RecipeStepDetail extends AppCompatActivity implements
         }
         currentPosition = position;
         instruction = steps.get(position).getDescription();
-         String videoURL = steps.get(position).getVideoURL();
-         String thumbnailURL = steps.get(position).getThumbnailURL();
+        String videoURL = steps.get(position).getVideoURL();
+        String thumbnailURL = steps.get(position).getThumbnailURL();
 
-         //Toast to be displayed if video is not available
+        //Toast to be displayed if video is not available
         toast = Toast.makeText(this, R.string.NoVideo, Toast.LENGTH_SHORT);
 
         //Check if there is an instruction for the step
@@ -105,7 +105,7 @@ public class RecipeStepDetail extends AppCompatActivity implements
             instructionTXT.setText(instruction);
         }
 
-        if(savedInstanceState==null) {
+        if (savedInstanceState == null) {
             if (Util.StringNotEmpty(videoURL)) {
                 initializePlayer(videoURL);
             } else if (Util.StringNotEmpty(thumbnailURL)) {
@@ -123,7 +123,7 @@ public class RecipeStepDetail extends AppCompatActivity implements
     @OnClick(R.id.nextBtn)
     public void next() {
         //stop playback
-            release();
+        release();
         //increment position
         currentPosition++;
 
@@ -157,7 +157,7 @@ public class RecipeStepDetail extends AppCompatActivity implements
     @OnClick(R.id.backBtn)
     public void back() {
         //stop playback
-            release();
+        release();
         //decrement position
         currentPosition--;
         if (currentPosition < 0)
@@ -172,16 +172,16 @@ public class RecipeStepDetail extends AppCompatActivity implements
 
 
         if (Util.StringNotEmpty(videoURL)) {
-             //   release();
+            //   release();
             videoView.setVisibility(View.VISIBLE);
             imageView.setVisibility(View.INVISIBLE);
             initializePlayer(videoURL);
         } else if (Util.StringNotEmpty(thumbnailURL)) {
-               // release();
+            // release();
             initializePlayer(thumbnailURL);
         } else {
             toast.show();
-             //   release();
+            //   release();
             videoView.setVisibility(View.INVISIBLE);
             imageView.setVisibility(View.VISIBLE);
         }
@@ -207,19 +207,19 @@ public class RecipeStepDetail extends AppCompatActivity implements
     }
 
     private void initializePlayer() {
-            // Create an instance of the ExoPlayer.
-            TrackSelector trackSelector = new DefaultTrackSelector();
-            LoadControl loadControl = new DefaultLoadControl();
-            mExoPlayer = ExoPlayerFactory.newSimpleInstance(this, trackSelector, loadControl);
-            videoView.setPlayer(mExoPlayer);
-            // Prepare the MediaSource.
-            ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
-            // Prepare the MediaSource. :)
-            MediaSource mediaSource = new ExtractorMediaSource(Uri.parse(currentUrl),
-                    mediaDataSourceFactory, extractorsFactory, null, null);
-            mExoPlayer.prepare(mediaSource);
-            mExoPlayer.setPlayWhenReady(true);
-            mExoPlayer.seekTo(currentMediaPlayerPosition);
+        // Create an instance of the ExoPlayer.
+        TrackSelector trackSelector = new DefaultTrackSelector();
+        LoadControl loadControl = new DefaultLoadControl();
+        mExoPlayer = ExoPlayerFactory.newSimpleInstance(this, trackSelector, loadControl);
+        videoView.setPlayer(mExoPlayer);
+        // Prepare the MediaSource.
+        ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
+        // Prepare the MediaSource. :)
+        MediaSource mediaSource = new ExtractorMediaSource(Uri.parse(currentUrl),
+                mediaDataSourceFactory, extractorsFactory, null, null);
+        mExoPlayer.prepare(mediaSource);
+        mExoPlayer.setPlayWhenReady(true);
+        mExoPlayer.seekTo(currentMediaPlayerPosition);
 
 
     }
@@ -244,7 +244,7 @@ public class RecipeStepDetail extends AppCompatActivity implements
             steps = savedInstanceState.getParcelableArrayList("list");
             position = savedInstanceState.getInt("position");
             currentPosition = savedInstanceState.getInt("currentPosition");
-            currentUrl=savedInstanceState.getString("currentUrl");
+            currentUrl = savedInstanceState.getString("currentUrl");
             currentMediaPlayerPosition = savedInstanceState.getLong("currentMediaPosition");
         }
     }
@@ -253,7 +253,7 @@ public class RecipeStepDetail extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        if(currentUrl!=null) {
+        if (currentUrl != null) {
             if (Util.StringNotEmpty(currentUrl)) {
                 initializePlayer();
             }
@@ -264,7 +264,7 @@ public class RecipeStepDetail extends AppCompatActivity implements
     protected void onPause() {
         super.onPause();
         if (mExoPlayer != null) {
-            mExoPlayer.setPlayWhenReady(false);
+            release();
         }
 
     }

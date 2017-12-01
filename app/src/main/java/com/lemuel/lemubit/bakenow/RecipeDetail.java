@@ -187,7 +187,7 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
 
             if (mTwoPane) {
                 currentMediaPlayerPosition = savedInstanceState.getLong("currentMediaPosition");
-                currentUrl=savedInstanceState.getString("currentUrl");
+                currentUrl = savedInstanceState.getString("currentUrl");
             }
         }
     }
@@ -267,6 +267,7 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
 
 
     }
+
     private void setupVideoView() {
 
         if (mExoPlayer == null) {
@@ -293,7 +294,7 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
     protected void onResume() {
         super.onResume();
 
-        if(mTwoPane) {
+        if (mTwoPane) {
             if (Util.StringNotEmpty(currentUrl)) {
                 setupVideoView();
             }
@@ -303,11 +304,11 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
     @Override
     protected void onPause() {
         super.onPause();
-        if (mTwoPane){
+        if (mTwoPane) {
             if (mExoPlayer != null) {
                 mExoPlayer.setPlayWhenReady(false);
             }
-    }
+        }
     }
 
 
