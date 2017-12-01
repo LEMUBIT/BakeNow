@@ -56,6 +56,10 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/*
+* The larger screens 'mTwoPane' will contain the Exoplayer in hte same activity
+* */
+
 public class RecipeDetail extends AppCompatActivity implements StepDescriptionAdapter.OnStepClickListener,
         ExoPlayer.EventListener {
     int position;
@@ -93,13 +97,12 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        //////////////////
+
         bandwidthMeter = new DefaultBandwidthMeter();
-        //got Assistance from https://github.com/yusufcakmak/ExoPlayerSample
         mediaDataSourceFactory = new DefaultDataSourceFactory(this,
                 com.google.android.exoplayer2.util.Util.getUserAgent(this, "bakenow"),
                 (TransferListener<? super DataSource>) bandwidthMeter);
-        ////////////////////
+
 
         toast = Toast.makeText(this, R.string.NoVideo, Toast.LENGTH_SHORT);
         if (savedInstanceState == null) {
@@ -216,8 +219,7 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
             String instruction = steps.get(stepPosition).getDescription();
             String videoURL = steps.get(stepPosition).getVideoURL();
             String thumbnailURL = steps.get(stepPosition).getThumbnailURL();
-//            String videoURL = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";//URL for testing
-//            String thumbnailURL = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";
+
             if (Util.StringNotEmpty(instruction)) {
                 instructionTXT.setText(instruction);
             }
