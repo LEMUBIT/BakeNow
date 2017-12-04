@@ -128,6 +128,7 @@ public class RecipeStepDetail extends AppCompatActivity implements
         //increment position
         currentPosition++;
 
+        //if it has reached the end of the list, start over again
         if (currentPosition >= steps.size())
             currentPosition = 0;
 
@@ -273,18 +274,18 @@ public class RecipeStepDetail extends AppCompatActivity implements
 
     public void release() {
         if (mExoPlayer != null) {
-            //mExoPlayer.stop();
+            mExoPlayer.stop();
             mExoPlayer.release();
             mExoPlayer = null;
         }
     }
 
-
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onStop() {
+        super.onStop();
         release();
     }
+
 
     @Override
     public void onTimelineChanged(Timeline timeline, Object manifest) {

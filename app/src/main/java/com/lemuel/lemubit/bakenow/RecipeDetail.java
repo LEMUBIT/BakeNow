@@ -297,7 +297,6 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
     @Override
     protected void onResume() {
         super.onResume();
-
         //If it is in tablet mode and there was a Current video being played
         if (mTwoPane) {
             if (Util.StringNotEmpty(currentUrl)) {
