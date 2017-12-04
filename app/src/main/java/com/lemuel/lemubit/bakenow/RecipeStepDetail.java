@@ -82,16 +82,16 @@ public class RecipeStepDetail extends AppCompatActivity implements
         bandwidthMeter = new DefaultBandwidthMeter();
         mediaDataSourceFactory = new DefaultDataSourceFactory
                 (this, com.google.android.exoplayer2.util.Util.getUserAgent
-                        (this, "bakenow"),
+                        (this, getString(R.string.bakeNow)),
                         (TransferListener<? super DataSource>) bandwidthMeter);
 
         if (savedInstanceState == null) {
-            steps = getIntent().getExtras().getParcelableArrayList("step");
-            position = getIntent().getExtras().getInt("stepPosition");
+            steps = getIntent().getExtras().getParcelableArrayList(getString(R.string.step));
+            position = getIntent().getExtras().getInt(getString(R.string.stepPosition));
             currentMediaPlayerPosition = 0L;
         } else {
-            steps = savedInstanceState.getParcelableArrayList("list");
-            position = savedInstanceState.getInt("position");
+            steps = savedInstanceState.getParcelableArrayList(getString(R.string.list));
+            position = savedInstanceState.getInt(getString(R.string.position));
         }
         currentPosition = position;
         instruction = steps.get(position).getDescription();
@@ -229,13 +229,13 @@ public class RecipeStepDetail extends AppCompatActivity implements
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (Util.ObjectisNotNull(outState)) {
-            outState.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) steps);
-            outState.putInt("position", position);
-            outState.putString("currentUrl", currentUrl);
-            outState.putInt("currentPosition", currentPosition);
+            outState.putParcelableArrayList(getString(R.string.list), (ArrayList<? extends Parcelable>) steps);
+            outState.putInt(getString(R.string.position), position);
+            outState.putString(getString(R.string.currentUrl), currentUrl);
+            outState.putInt(getString(R.string.currentPosition), currentPosition);
             if (Util.ObjectisNotNull(mExoPlayer)) {
                 currentMediaPlayerPosition = mExoPlayer.getCurrentPosition();
-                outState.putLong("currentMediaPosition", currentMediaPlayerPosition);
+                outState.putLong(getString(R.string.currentMediaPosition), currentMediaPlayerPosition);
             }
 
         }
@@ -245,11 +245,11 @@ public class RecipeStepDetail extends AppCompatActivity implements
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         if (savedInstanceState != null) {
-            steps = savedInstanceState.getParcelableArrayList("list");
-            position = savedInstanceState.getInt("position");
-            currentPosition = savedInstanceState.getInt("currentPosition");
-            currentUrl = savedInstanceState.getString("currentUrl");
-            currentMediaPlayerPosition = savedInstanceState.getLong("currentMediaPosition");
+            steps = savedInstanceState.getParcelableArrayList(getString(R.string.list));
+            position = savedInstanceState.getInt(getString(R.string.position));
+            currentPosition = savedInstanceState.getInt(getString(R.string.currentPosition));
+            currentUrl = savedInstanceState.getString(getString(R.string.currentUrl));
+            currentMediaPlayerPosition = savedInstanceState.getLong(getString(R.string.currentMediaPosition));
         }
     }
 

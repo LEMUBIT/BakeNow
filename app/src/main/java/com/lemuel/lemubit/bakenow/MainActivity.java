@@ -53,16 +53,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         mListState = mLayoutManager.onSaveInstanceState();
-        outState.putParcelable("listkey", mListState);
-        outState.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) recipes);
+        outState.putParcelable(getString(R.string.listkey), mListState);
+        outState.putParcelableArrayList(getString(R.string.list), (ArrayList<? extends Parcelable>) recipes);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         if (savedInstanceState != null) {
-            mListState = savedInstanceState.getParcelable("listkey");
-            recipes = savedInstanceState.getParcelableArrayList("list");
+            mListState = savedInstanceState.getParcelable(getString(R.string.listkey));
+            recipes = savedInstanceState.getParcelableArrayList(getString(R.string.list));
         }
     }
 
@@ -93,12 +93,12 @@ public class MainActivity extends AppCompatActivity {
                 public void onFailure(Call<List<Recipe>> call, Throwable t) {
                     Log.d("Error", t.getMessage());
                     recipeProgress.setVisibility(View.INVISIBLE);
-                    Toast.makeText(MainActivity.this, "Check Connection", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, R.string.connectionCheck, Toast.LENGTH_SHORT).show();
                 }
             });
         } else {
             //Load from savedInstanceState if state had been saved :)
-            recipes = savedInstanceState.getParcelableArrayList("list");
+            recipes = savedInstanceState.getParcelableArrayList(getString(R.string.list));
             recipeAdapter = new RecipeAdapter(MainActivity.this, recipes);
             recipeRecyclerV.setAdapter(recipeAdapter);
         }

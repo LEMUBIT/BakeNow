@@ -39,15 +39,16 @@ public class IngredientsFragment extends Fragment {
 
             //Check if savedInstanceStateIsNull
             if (Util.ObjectisNull(savedInstanceState)) {
-                mRecipes = bundle.getParcelableArrayList("list");
-                position = bundle.getInt("position");
+                mRecipes = bundle.getParcelableArrayList(getString(R.string.list));
+                position = bundle.getInt(getString(R.string.position));
             } else {
-                mRecipes = savedInstanceState.getParcelableArrayList("list");
-                position = savedInstanceState.getInt("position");
+                mRecipes = savedInstanceState.getParcelableArrayList(getString(R.string.list));
+                position = savedInstanceState.getInt(getString(R.string.position));
             }
 
             //if its Portrait for large screens or if it is a smaller screen, then show
-            if(this.getResources().getConfiguration().orientation== Configuration.ORIENTATION_PORTRAIT || Util.isSmallScreen(getActivity())) {
+            if(this.getResources().getConfiguration().orientation== Configuration.ORIENTATION_PORTRAIT ||
+                    Util.isSmallScreen(getActivity())) {
 
                 mIngredients = mRecipes.get(position).getIngredients();
 
@@ -65,16 +66,16 @@ public class IngredientsFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) mRecipes);
-        outState.putInt("position", position);
+        outState.putParcelableArrayList(getString(R.string.list), (ArrayList<? extends Parcelable>) mRecipes);
+        outState.putInt(getString(R.string.position), position);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null) {
-            mRecipes = savedInstanceState.getParcelableArrayList("list");
-            position = savedInstanceState.getInt("position");
+            mRecipes = savedInstanceState.getParcelableArrayList(getString(R.string.list));
+            position = savedInstanceState.getInt(getString(R.string.position));
         }
     }
 }

@@ -100,17 +100,17 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
 
         bandwidthMeter = new DefaultBandwidthMeter();
         mediaDataSourceFactory = new DefaultDataSourceFactory(this,
-                com.google.android.exoplayer2.util.Util.getUserAgent(this, "bakenow"),
+                com.google.android.exoplayer2.util.Util.getUserAgent(this, getString(R.string.bakeNow)),
                 (TransferListener<? super DataSource>) bandwidthMeter);
 
 
         toast = Toast.makeText(this, R.string.NoVideo, Toast.LENGTH_SHORT);
         if (savedInstanceState == null) {
-            position = getIntent().getExtras().getInt("position");
+            position = getIntent().getExtras().getInt(getString(R.string.position));
             recipes = MainActivity.recipes;
         } else {
-            recipes = savedInstanceState.getParcelableArrayList("list");
-            position = savedInstanceState.getInt("position");
+            recipes = savedInstanceState.getParcelableArrayList(getString(R.string.list));
+            position = savedInstanceState.getInt(getString(R.string.position));
         }
         ingredientsLBL.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_assignment_black_24dp, 0, 0, 0);
         stepsLBL.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_done_all_black_24dp, 0, 0, 0);
@@ -133,8 +133,8 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
         if (savedInstanceState == null) {
             ingredientsFrag = new IngredientsFragment();
             Bundle b = new Bundle();
-            b.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) recipes);
-            b.putInt("position", position);
+            b.putParcelableArrayList(getString(R.string.list), (ArrayList<? extends Parcelable>) recipes);
+            b.putInt(getString(R.string.position), position);
             ingredientsFrag.setArguments(b);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.FRGingredients, ingredientsFrag)
@@ -142,8 +142,8 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
 
             stepDescriptionFragment = new StepDescriptionFragment();
             Bundle d = new Bundle();
-            d.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) recipes);
-            d.putInt("position", position);
+            d.putParcelableArrayList(getString(R.string.list), (ArrayList<? extends Parcelable>) recipes);
+            d.putInt(getString(R.string.position), position);
             stepDescriptionFragment.setArguments(d);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.FRGdescription, stepDescriptionFragment)
@@ -162,20 +162,20 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (Util.ObjectisNotNull(outState) && mTwoPane) {
-            outState.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) recipes);
-            outState.putInt("position", position);
-            outState.putString("currentUrl", currentUrl);
-            getSupportFragmentManager().putFragment(outState, "stepDescription", stepDescriptionFragment);
-            getSupportFragmentManager().putFragment(outState, "ingredientsFragm", ingredientsFrag);
+            outState.putParcelableArrayList(getString(R.string.list), (ArrayList<? extends Parcelable>) recipes);
+            outState.putInt(getString(R.string.position), position);
+            outState.putString(getString(R.string.currentUrl), currentUrl);
+            getSupportFragmentManager().putFragment(outState, getString(R.string.stepDescription), stepDescriptionFragment);
+            getSupportFragmentManager().putFragment(outState, getString(R.string.ingredientsFragm), ingredientsFrag);
             if (Util.ObjectisNotNull(mExoPlayer)) {
                 currentMediaPlayerPosition = mExoPlayer.getCurrentPosition();
-                outState.putLong("currentMediaPosition", currentMediaPlayerPosition);
+                outState.putLong(getString(R.string.currentMediaPosition), currentMediaPlayerPosition);
             }
         } else if (Util.ObjectisNotNull(outState) && !mTwoPane) {
-            outState.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) recipes);
-            outState.putInt("position", position);
-            getSupportFragmentManager().putFragment(outState, "stepDescription", stepDescriptionFragment);
-            getSupportFragmentManager().putFragment(outState, "ingredientsFragm", ingredientsFrag);
+            outState.putParcelableArrayList(getString(R.string.list), (ArrayList<? extends Parcelable>) recipes);
+            outState.putInt(getString(R.string.position), position);
+            getSupportFragmentManager().putFragment(outState, getString(R.string.stepDescription), stepDescriptionFragment);
+            getSupportFragmentManager().putFragment(outState, getString(R.string.ingredientsFragm), ingredientsFrag);
         }
     }
 
@@ -183,16 +183,16 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         if (savedInstanceState != null) {
-            recipes = savedInstanceState.getParcelableArrayList("list");
-            position = savedInstanceState.getInt("position");
+            recipes = savedInstanceState.getParcelableArrayList(getString(R.string.list));
+            position = savedInstanceState.getInt(getString(R.string.position));
             stepDescriptionFragment = (StepDescriptionFragment)
-                    getSupportFragmentManager().getFragment(savedInstanceState, "stepDescription");
+                    getSupportFragmentManager().getFragment(savedInstanceState, getString(R.string.stepDescription));
             ingredientsFrag = (IngredientsFragment)
-                    getSupportFragmentManager().getFragment(savedInstanceState, "ingredientsFragm");
+                    getSupportFragmentManager().getFragment(savedInstanceState, getString(R.string.ingredientsFragm));
 
             if (mTwoPane) {
-                currentMediaPlayerPosition = savedInstanceState.getLong("currentMediaPosition");
-                currentUrl = savedInstanceState.getString("currentUrl");
+                currentMediaPlayerPosition = savedInstanceState.getLong(getString(R.string.currentMediaPosition));
+                currentUrl = savedInstanceState.getString(getString(R.string.currentUrl));
             }
         }
     }
@@ -242,8 +242,8 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
             }
 
         } else {
-            s.putParcelableArrayList("step", (ArrayList<? extends Parcelable>) steps);
-            s.putInt("stepPosition", stepPosition);
+            s.putParcelableArrayList(getString(R.string.step), (ArrayList<? extends Parcelable>) steps);
+            s.putInt(getString(R.string.stepPosition), stepPosition);
             startActivity(new Intent(this, RecipeStepDetail.class).putExtras(s));
         }
 

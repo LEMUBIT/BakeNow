@@ -44,7 +44,7 @@ public class StepDescriptionAdapter extends RecyclerView.Adapter<StepDescription
             mCallback = (OnStepClickListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
-                    + " must implement OnImageClickListener");
+                    + context.getString(R.string.must_Implement));
         }
 
         return new StepViewHolder(view);

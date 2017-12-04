@@ -60,7 +60,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
                 Picasso.with(context).load(recipes.get(position).getImage()).into(holder.RecipeImage);
             }
         } catch (Exception e) {
-            Log.e("image eeer:", e.getMessage());
+            Log.e("image err:", e.getMessage());
         }
     }
 

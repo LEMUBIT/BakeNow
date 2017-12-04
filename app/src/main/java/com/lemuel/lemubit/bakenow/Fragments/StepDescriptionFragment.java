@@ -41,13 +41,13 @@ public class StepDescriptionFragment extends Fragment {
         if (Util.ObjectisNotNull(bundle)) {
 
             if (Util.ObjectisNull(savedInstanceState)) {
-                mRecipes = bundle.getParcelableArrayList("list");
-                position = bundle.getInt("position");
+                mRecipes = bundle.getParcelableArrayList(getString(R.string.list));
+                position = bundle.getInt(getString(R.string.position));
                 mSteps = mRecipes.get(position).getSteps();
             } else {
                 //use savedInstanceState if not null
-                mSteps = savedInstanceState.getParcelableArrayList("list");
-                position = savedInstanceState.getInt("position");
+                mSteps = savedInstanceState.getParcelableArrayList(getString(R.string.list));
+                position = savedInstanceState.getInt(getString(R.string.position));
             }
 
 
@@ -66,18 +66,18 @@ public class StepDescriptionFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) mSteps);
-        outState.putInt("position", position);
-        outState.putParcelableArrayList("recipeList",(ArrayList<? extends Parcelable>) mRecipes);
+        outState.putParcelableArrayList(getString(R.string.list), (ArrayList<? extends Parcelable>) mSteps);
+        outState.putInt(getString(R.string.position), position);
+        outState.putParcelableArrayList(getString(R.string.recipeList),(ArrayList<? extends Parcelable>) mRecipes);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null) {
-            mSteps = savedInstanceState.getParcelableArrayList("list");
-            position = savedInstanceState.getInt("position");
-            mRecipes= savedInstanceState.getParcelableArrayList("recipeList");
+            mSteps = savedInstanceState.getParcelableArrayList(getString(R.string.list));
+            position = savedInstanceState.getInt(getString(R.string.position));
+            mRecipes= savedInstanceState.getParcelableArrayList(getString(R.string.recipeList));
         }
     }
 }
