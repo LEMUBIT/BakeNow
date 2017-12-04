@@ -110,8 +110,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             // Notify the widget that the data has changed
             ComponentName widget = new ComponentName(context, RecipeWidgetProvider.class);
             int[] ids = AppWidgetManager.getInstance(context).getAppWidgetIds(widget);
-          //  AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(ids, R.id.recipeList);
-          //  RecipeWidgetProvider.updateAppWidget(context, AppWidgetManager.getInstance(context), ids[0]);
             Intent intent = new Intent(context, RecipeWidgetProvider.class);
             intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
             intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);

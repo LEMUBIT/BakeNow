@@ -171,7 +171,6 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
                 currentMediaPlayerPosition = mExoPlayer.getCurrentPosition();
                 outState.putLong("currentMediaPosition", currentMediaPlayerPosition);
             }
-            //curUrl ="" //todo :: check
         } else if (Util.ObjectisNotNull(outState) && !mTwoPane) {
             outState.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) recipes);
             outState.putInt("position", position);
@@ -299,6 +298,7 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
     protected void onResume() {
         super.onResume();
 
+        //If it is in tablet mode and there was a Current video being played
         if (mTwoPane) {
             if (Util.StringNotEmpty(currentUrl)) {
                 setupVideoView();

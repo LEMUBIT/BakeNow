@@ -16,7 +16,7 @@ import com.lemuel.lemubit.bakenow.MainActivity;
 public class Util {
 
     //checks if activity was just run
-   public static Boolean firstRun=true;
+    public static Boolean firstRun = true;
 
     //check if a string is empty or null
     @NonNull
@@ -130,18 +130,13 @@ public class Util {
     }
 
     //Check if device is in Portrait mode
-    public static Boolean isPortraitMode(int orientation)
-    {
-        if(orientation== Configuration.ORIENTATION_PORTRAIT)
-        {
+    public static Boolean isPortraitMode(int orientation) {
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
             return true;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
-
 
 
 }

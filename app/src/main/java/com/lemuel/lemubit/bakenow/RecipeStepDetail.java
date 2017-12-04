@@ -273,12 +273,11 @@ public class RecipeStepDetail extends AppCompatActivity implements
             Log.d("pause", "Paused player!!!");
             mExoPlayer.setPlayWhenReady(false);
         }
-        //todo :: Fix Exoplayer not stopping
     }
 
     public void release() {
         if (mExoPlayer != null) {
-            mExoPlayer.stop();
+            //mExoPlayer.stop();
             mExoPlayer.release();
             mExoPlayer = null;
         }
