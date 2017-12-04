@@ -2,6 +2,7 @@ package com.lemuel.lemubit.bakenow;
 
 import android.content.res.Configuration;
 import android.os.Parcelable;
+import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -147,5 +148,10 @@ public class MainActivity extends AppCompatActivity {
             loadAppropriateLayout();
             mLayoutManager.onRestoreInstanceState(mListState);
         }
+    }
+
+    @VisibleForTesting
+    public List<Recipe> testrecipes() {
+        return recipes;
     }
 }
