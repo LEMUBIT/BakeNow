@@ -189,7 +189,6 @@ public class RecipeStepDetail extends AppCompatActivity implements
     }
 
     private void initializePlayer(String url) {
-        Log.d("initialize", "initialized!!!");
         if (mExoPlayer == null) {
             // Create an instance of the ExoPlayer.
             currentUrl = url;
@@ -257,7 +256,6 @@ public class RecipeStepDetail extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("resume", "Resumed!!!");
         if (currentUrl != null) {
             if (Util.StringNotEmpty(currentUrl)) {
                 initializePlayer();
@@ -268,9 +266,7 @@ public class RecipeStepDetail extends AppCompatActivity implements
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d("pause", "Paused!!!");
         if (mExoPlayer != null) {
-            Log.d("pause", "Paused player!!!");
             mExoPlayer.setPlayWhenReady(false);
         }
     }
@@ -287,7 +283,6 @@ public class RecipeStepDetail extends AppCompatActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d("destroy","destroyed!!!");
         release();
     }
 
