@@ -36,6 +36,13 @@ dependencies {
     compile 'com.android.support:support-v4:26.+'
     compile "com.android.support:design:26.+"
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
+    androidTestCompile 'com.android.support:support-annotations:25.1.0'
+    androidTestCompile 'com.android.support.test.espresso:espresso-intents:2.2.2'
+    androidTestCompile 'com.android.support.test.espresso:espresso-contrib:2.2.2'
+    compile 'com.android.support.test.espresso:espresso-idling-resource:2.2.2'
+    testCompile 'junit:junit:4.12'
+
 }
