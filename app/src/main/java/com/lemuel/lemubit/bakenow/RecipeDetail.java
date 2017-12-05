@@ -54,8 +54,7 @@ import butterknife.ButterKnife;
 * and description if it is a tablet
 * */
 
-public class RecipeDetail extends AppCompatActivity implements StepDescriptionAdapter.OnStepClickListener
-        {
+public class RecipeDetail extends AppCompatActivity implements StepDescriptionAdapter.OnStepClickListener {
     int position;
     @BindView(R.id.ingredientsLBL)
     TextView ingredientsLBL;
@@ -66,7 +65,7 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
 
     SimpleExoPlayerView videoView;
     TextView instructionTXT;
-            Snackbar snackbar;
+    Snackbar snackbar;
     ImageView imageView;
     private boolean mTwoPane;
     List<Recipe> recipes = new ArrayList<>();
@@ -119,9 +118,9 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
         if (findViewById(R.id.recipeStepLayout) != null) {
             //the layout for large screens
             mTwoPane = true;
-            videoView =  findViewById(R.id.video_view);
-            instructionTXT =  findViewById(R.id.InstructionTXT);
-            imageView =  findViewById(R.id.imageView);
+            videoView = findViewById(R.id.video_view);
+            instructionTXT = findViewById(R.id.InstructionTXT);
+            imageView = findViewById(R.id.imageView);
         } else {
             mTwoPane = false;
         }

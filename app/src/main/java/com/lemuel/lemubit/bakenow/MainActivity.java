@@ -50,18 +50,14 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         //Check if there is internet connection before requesting
-        if (Util.isConnected(MainActivity.this) && recipes==null) {
+        if (Util.isConnected(MainActivity.this) && recipes == null) {
             loadRecipe(savedInstanceState);
-        }
-        else if(recipes!=null)
-        {
+        } else if (recipes != null) {
             //to prevent another network request
             // since the recipes downloaded is still available in the static variable
             recipeAdapter = new RecipeAdapter(MainActivity.this, recipes);
             recipeRecyclerV.setAdapter(recipeAdapter);
-        }
-        else
-        {
+        } else {
             Toast.makeText(MainActivity.this, R.string.connectionCheck, Toast.LENGTH_SHORT).show();
         }
         loadAppropriateLayout();

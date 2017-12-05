@@ -47,7 +47,7 @@ import butterknife.OnClick;
 /*
 * Displays Media player and step description for smaller screens
 */
-public class RecipeStepDetail extends AppCompatActivity  {
+public class RecipeStepDetail extends AppCompatActivity {
     List<Steps> steps;
     int initialPosition;
     int currentPosition;
@@ -147,7 +147,7 @@ public class RecipeStepDetail extends AppCompatActivity  {
         } else {
             snackbar.show();
             videoView.setVisibility(View.INVISIBLE);
-            currentUrl="";
+            currentUrl = "";
             if (Util.StringNotEmpty(thumbnailURL))
                 Picasso.with(this).load(thumbnailURL).placeholder(R.drawable.chef).into(imageView);
         }
@@ -178,7 +178,7 @@ public class RecipeStepDetail extends AppCompatActivity  {
             initializePlayer(videoURL);
         } else {
             snackbar.show();
-            currentUrl="";
+            currentUrl = "";
             videoView.setVisibility(View.INVISIBLE);
 
             if (Util.StringNotEmpty(thumbnailURL))
@@ -282,7 +282,6 @@ public class RecipeStepDetail extends AppCompatActivity  {
         super.onStop();
         release();
     }
-
 
 
 }
