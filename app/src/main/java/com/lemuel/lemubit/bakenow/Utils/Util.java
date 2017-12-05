@@ -123,6 +123,8 @@ public class Util {
         }
     }
 
+    //Check if device is currently connected
+    //code snippet from www.androidhive.info
     public static boolean isConnected(Activity context) {
         ConnectivityManager
                 cm = (ConnectivityManager) context
