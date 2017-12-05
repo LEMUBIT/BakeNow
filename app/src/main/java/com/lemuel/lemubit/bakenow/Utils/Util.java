@@ -9,6 +9,7 @@ import android.util.DisplayMetrics;
 import android.widget.Toast;
 
 import com.lemuel.lemubit.bakenow.MainActivity;
+import com.lemuel.lemubit.bakenow.R;
 
 /**
  * Created by charl on 10/11/2017.
@@ -45,15 +46,8 @@ public class Util {
     @NonNull
     public static Boolean isLargeScreen(Activity context) {
         //CALCULATE SCREEN SIZE, IN THIS CASE LARGE SCREENS ARE >700
-        DisplayMetrics metrics = new DisplayMetrics();
-        context.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        int widthPixels = metrics.widthPixels;
-        int heightPixels = metrics.heightPixels;
-        float scaleFactor = metrics.density;
-        float widthDp = widthPixels / scaleFactor;
-        float heightDp = heightPixels / scaleFactor;
-        float smallestWidth = Math.min(widthDp, heightDp);
-        if (smallestWidth >= 700) {
+        Boolean aBoolean=context.getResources().getBoolean(R.bool.isLargeTablet);
+        if (aBoolean) {
             return true;
         } else {
             return false;
@@ -63,16 +57,9 @@ public class Util {
     //check if it's a medium sized screen >=600DP
     @NonNull
     public static Boolean isMediumScreen(Activity context) {
-        //CALCULATE SCREEN SIZE, IN THIS CASE MEDIUM SCREENS ARE >=600
-        DisplayMetrics metrics = new DisplayMetrics();
-        context.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        int widthPixels = metrics.widthPixels;
-        int heightPixels = metrics.heightPixels;
-        float scaleFactor = metrics.density;
-        float widthDp = widthPixels / scaleFactor;
-        float heightDp = heightPixels / scaleFactor;
-        float smallestWidth = Math.min(widthDp, heightDp);
-        if (smallestWidth >= 600) {
+        //CALCULATE SCREEN SIZE, IN THIS CASE MEDIUM SCREENS ARE DP>=600
+        Boolean aBoolean=context.getResources().getBoolean(R.bool.isTablet);
+        if (aBoolean) {
             return true;
         } else {
             return false;
@@ -82,16 +69,9 @@ public class Util {
     //check if it's a smaller phone screen <600
     @NonNull
     public static Boolean isSmallScreen(Activity context) {
-        //CALCULATE SCREEN SIZE, IN THIS CASE MEDIUM SCREENS ARE >=600
-        DisplayMetrics metrics = new DisplayMetrics();
-        context.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        int widthPixels = metrics.widthPixels;
-        int heightPixels = metrics.heightPixels;
-        float scaleFactor = metrics.density;
-        float widthDp = widthPixels / scaleFactor;
-        float heightDp = heightPixels / scaleFactor;
-        float smallestWidth = Math.min(widthDp, heightDp);
-        if (smallestWidth < 600) {
+        //CALCULATE SCREEN SIZE, IN THIS CASE MEDIUM SCREENS ARE DP>=600
+        Boolean aBoolean=context.getResources().getBoolean(R.bool.isSmallScreen);
+        if (aBoolean) {
             return true;
         } else {
             return false;
