@@ -4,6 +4,7 @@ import android.media.MediaDataSource;
 import android.net.Uri;
 import android.os.Parcelable;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -98,8 +99,10 @@ public class RecipeStepDetail extends AppCompatActivity implements
         String videoURL = steps.get(position).getVideoURL();
         String thumbnailURL = steps.get(position).getThumbnailURL();
 
-        //Toast to be displayed if video is not available
-        toast = Toast.makeText(this, R.string.NoVideo, Toast.LENGTH_SHORT);
+        //display if video is not available
+        Snackbar snackbar = Snackbar
+                .make(findViewById(R.id.videoDetailLayout), R.string.NoVideo, Snackbar.LENGTH_LONG);
+        snackbar.show();
 
         //Check if there is an instruction for the step
         if (Util.StringNotEmpty(instruction)) {
