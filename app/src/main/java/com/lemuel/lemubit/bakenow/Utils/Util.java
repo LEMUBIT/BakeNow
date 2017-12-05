@@ -98,7 +98,9 @@ public class Util {
         }
     }
 
-    //Check if a Recipe ingredient is more than one
+    /*Check if a Recipe ingredient is more than one e.g if Eggs are measured in crates, it will
+        output '2 crates of eggs' instead of '2 crate of eggs'
+    */
     public static String Plural(Double quantity, String measure) {
         if (quantity <= 1.0) {
             return measure;

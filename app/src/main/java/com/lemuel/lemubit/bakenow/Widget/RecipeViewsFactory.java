@@ -71,8 +71,10 @@ public class RecipeViewsFactory implements RemoteViewsService.RemoteViewsFactory
     public RemoteViews getViewAt(int position) {
         RemoteViews row = new RemoteViews
                 (context.getPackageName(), R.layout.recipe_list_row);
+
         row.setTextViewText(R.id.recipeRow, Ingredients.get(position).getIngredient());
 
+        //to format text properly
         String recipeText = Ingredients.get(position).getQuantity() + " "
                 + Util.Plural(Ingredients.get(position).getQuantity(),
                 Ingredients.get(position).getMeasure())

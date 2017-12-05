@@ -45,10 +45,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /*
-* For smaller screens which can't display steps and detail at once
+* Displays Media player and step description for smaller screens
 */
-public class RecipeStepDetail extends AppCompatActivity implements
-        ExoPlayer.EventListener {
+public class RecipeStepDetail extends AppCompatActivity  {
     List<Steps> steps;
     int initialPosition;
     int currentPosition;
@@ -60,10 +59,8 @@ public class RecipeStepDetail extends AppCompatActivity implements
     @BindView(R.id.imageView)
     ImageView imageView;
 
-    private int playerState = 0;
     private BandwidthMeter bandwidthMeter;
     private DataSource.Factory mediaDataSourceFactory;
-    Toast toast;
     Snackbar snackbar;
     private Long currentMediaPlayerPosition;
     private String currentUrl;
@@ -91,7 +88,7 @@ public class RecipeStepDetail extends AppCompatActivity implements
             currentMediaPlayerPosition = 0L;
         } else {
             steps = savedInstanceState.getParcelableArrayList(getString(R.string.list));
-            initialPosition = savedInstanceState.getInt(getString(R.string.currentPosition));//todo//was initialPosition before
+            initialPosition = savedInstanceState.getInt(getString(R.string.currentPosition));
         }
         currentPosition = initialPosition;
         instruction = steps.get(initialPosition).getDescription();
@@ -100,7 +97,7 @@ public class RecipeStepDetail extends AppCompatActivity implements
 
         //display if video is not available
         snackbar = Snackbar
-                .make(findViewById(R.id.videoDetailLayout), R.string.NoVideo, Snackbar.LENGTH_LONG);
+                .make(findViewById(R.id.recipeStepLayout), R.string.NoVideo, Snackbar.LENGTH_LONG);
 
 
         //Check if there is an instruction for the step
@@ -137,6 +134,7 @@ public class RecipeStepDetail extends AppCompatActivity implements
         String videoURL = steps.get(currentPosition).getVideoURL();
         String thumbnailURL = steps.get(currentPosition).getThumbnailURL();
 
+        //Check if there is an instruction before setting the text
         if (Util.StringNotEmpty(instruction)) {
             instructionTXT.setText(instruction);
         }
@@ -286,43 +284,5 @@ public class RecipeStepDetail extends AppCompatActivity implements
     }
 
 
-    @Override
-    public void onTimelineChanged(Timeline timeline, Object manifest) {
 
-    }
-
-    @Override
-    public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
-
-    }
-
-    @Override
-    public void onLoadingChanged(boolean isLoading) {
-
-    }
-
-    @Override
-    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-        playerState = playbackState;
-    }
-
-    @Override
-    public void onRepeatModeChanged(int repeatMode) {
-
-    }
-
-    @Override
-    public void onPlayerError(ExoPlaybackException error) {
-
-    }
-
-    @Override
-    public void onPositionDiscontinuity() {
-
-    }
-
-    @Override
-    public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
-
-    }
 }

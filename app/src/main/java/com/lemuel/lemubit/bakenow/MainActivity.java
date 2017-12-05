@@ -1,6 +1,5 @@
 package com.lemuel.lemubit.bakenow;
 
-import android.content.res.Configuration;
 import android.os.Parcelable;
 import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +27,9 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * Loads information from network request into recycler view using Retrofit
+ * */
 public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.recipe_recycler_view)
@@ -150,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //used to get 'recipes' during testing
     @VisibleForTesting
     public List<Recipe> testrecipes() {
         return recipes;

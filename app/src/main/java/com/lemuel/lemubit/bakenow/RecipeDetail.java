@@ -1,25 +1,18 @@
 package com.lemuel.lemubit.bakenow;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Parcelable;
-import android.support.v4.media.session.MediaSessionCompat;
-import android.support.v4.media.session.PlaybackStateCompat;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.devbrackets.android.exomedia.ui.widget.VideoView;
-import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -42,13 +35,13 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.TransferListener;
-import com.lemuel.lemubit.bakenow.Adapter.RecipeAdapter;
 import com.lemuel.lemubit.bakenow.Adapter.StepDescriptionAdapter;
 import com.lemuel.lemubit.bakenow.Fragments.IngredientsFragment;
 import com.lemuel.lemubit.bakenow.Fragments.StepDescriptionFragment;
 import com.lemuel.lemubit.bakenow.Models.Recipe;
 import com.lemuel.lemubit.bakenow.Models.Steps;
 import com.lemuel.lemubit.bakenow.Utils.Util;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,11 +50,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /*
-* The larger screens 'mTwoPane' will contain the Exoplayer in hte same activity
+* This is the activity that displays the ingredients and steps, but also includes the media player
+* and description if it is a tablet
 * */
 
-public class RecipeDetail extends AppCompatActivity implements StepDescriptionAdapter.OnStepClickListener,
-        ExoPlayer.EventListener {
+public class RecipeDetail extends AppCompatActivity implements StepDescriptionAdapter.OnStepClickListener
+        {
     int position;
     @BindView(R.id.ingredientsLBL)
     TextView ingredientsLBL;
@@ -72,13 +66,12 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
 
     SimpleExoPlayerView videoView;
     TextView instructionTXT;
-    Toast toast;
+            Snackbar snackbar;
     ImageView imageView;
     private boolean mTwoPane;
     List<Recipe> recipes = new ArrayList<>();
 
 
-    private int playerState = 0;
     private SimpleExoPlayer mExoPlayer;
     private BandwidthMeter bandwidthMeter;
     private DataSource.Factory mediaDataSourceFactory;
@@ -104,7 +97,10 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
                 (TransferListener<? super DataSource>) bandwidthMeter);
 
 
-        toast = Toast.makeText(this, R.string.NoVideo, Toast.LENGTH_SHORT);
+        //display if video is not available
+        snackbar = Snackbar
+                .make(findViewById(R.id.recipeDetailMainLayout), R.string.NoVideo, Snackbar.LENGTH_LONG);
+
         if (savedInstanceState == null) {
             position = getIntent().getExtras().getInt(getString(R.string.position));
             recipes = MainActivity.recipes;
@@ -120,16 +116,17 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
         }
 
         //check if it is the Two Fragment layout for Large screens
-        if (findViewById(R.id.videoDetailLayout) != null) {
+        if (findViewById(R.id.recipeStepLayout) != null) {
             //the layout for large screens
             mTwoPane = true;
-            videoView = (SimpleExoPlayerView) findViewById(R.id.video_view);
-            instructionTXT = (TextView) findViewById(R.id.InstructionTXT);
-            imageView = (ImageView) findViewById(R.id.imageView);
+            videoView =  findViewById(R.id.video_view);
+            instructionTXT =  findViewById(R.id.InstructionTXT);
+            imageView =  findViewById(R.id.imageView);
         } else {
             mTwoPane = false;
         }
 
+        //Begin fragment transaction if savedInstance state is null
         if (savedInstanceState == null) {
             ingredientsFrag = new IngredientsFragment();
             Bundle b = new Bundle();
@@ -150,9 +147,10 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
                     .commit();
         }
 
+        //called once on first run
         if (Util.ObjectisNull(currentUrl) && Util.firstRun == true && mTwoPane && Util.ObjectisNull(savedInstanceState)) {
             currentMediaPlayerPosition = 0L;
-            Util.firstRun = false;
+            Util.firstRun = false;//set to false so that onStepSelected isn't called again if activity is recreated
             onStepSelected(0, recipes.get(position).getSteps());
         }
 
@@ -231,17 +229,16 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
                 videoView.setVisibility(View.VISIBLE);
                 imageView.setVisibility(View.INVISIBLE);
                 setupVideoView(videoURL);
-            } else if (Util.StringNotEmpty(thumbnailURL)) {
-                release();
-                setupVideoView(thumbnailURL);
             } else {
-                toast.show();
                 release();
+                snackbar.show();
                 videoView.setVisibility(View.INVISIBLE);
-                imageView.setVisibility(View.VISIBLE);
+                if (Util.StringNotEmpty(thumbnailURL))
+                    Picasso.with(this).load(thumbnailURL).placeholder(R.drawable.chef).into(imageView);
             }
 
         } else {
+            //If it is not a Tablet then open the RecipeStepDetail activity
             s.putParcelableArrayList(getString(R.string.step), (ArrayList<? extends Parcelable>) steps);
             s.putInt(getString(R.string.stepPosition), stepPosition);
             startActivity(new Intent(this, RecipeStepDetail.class).putExtras(s));
@@ -282,11 +279,12 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
             videoView.setPlayer(mExoPlayer);
             // Prepare the MediaSource.
             ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
-            // Prepare the MediaSource. :)
+            // Prepare the MediaSource
             MediaSource mediaSource = new ExtractorMediaSource(Uri.parse(currentUrl),
                     mediaDataSourceFactory, extractorsFactory, null, null);
             mExoPlayer.prepare(mediaSource);
             mExoPlayer.setPlayWhenReady(true);
+            //after resuming media player, seek to the latest position
             mExoPlayer.seekTo(currentMediaPlayerPosition);
 
         }
@@ -334,43 +332,5 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
         }
     }
 
-    @Override
-    public void onTimelineChanged(Timeline timeline, Object manifest) {
 
-    }
-
-    @Override
-    public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
-
-    }
-
-    @Override
-    public void onLoadingChanged(boolean isLoading) {
-
-    }
-
-    @Override
-    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-        playerState = playbackState;
-    }
-
-    @Override
-    public void onRepeatModeChanged(int repeatMode) {
-
-    }
-
-    @Override
-    public void onPlayerError(ExoPlaybackException error) {
-
-    }
-
-    @Override
-    public void onPositionDiscontinuity() {
-
-    }
-
-    @Override
-    public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
-
-    }
 }

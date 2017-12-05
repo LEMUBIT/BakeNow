@@ -3,10 +3,6 @@ package com.lemuel.lemubit.bakenow.Models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by charl on 08/11/2017.
- **/
-
 public class Steps implements Parcelable {
 
     private int id;

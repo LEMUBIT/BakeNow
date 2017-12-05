@@ -37,7 +37,7 @@ public class IngredientsFragment extends Fragment {
         Bundle bundle = this.getArguments();
         if (Util.ObjectisNotNull(bundle)) {
 
-            //Check if savedInstanceStateIsNull
+            //Get Recipes list and current list position from bundle or savedInstanceState
             if (Util.ObjectisNull(savedInstanceState)) {
                 mRecipes = bundle.getParcelableArrayList(getString(R.string.list));
                 position = bundle.getInt(getString(R.string.position));
@@ -52,6 +52,7 @@ public class IngredientsFragment extends Fragment {
 
                 mIngredients = mRecipes.get(position).getIngredients();
 
+                //properly format ingredients and quantity
                 for (int i = 0; i < mIngredients.size(); i++) {
                     ingredients.append("-- " + mIngredients.get(i).getQuantity() + " "
                             + Util.Plural(mIngredients.get(i).getQuantity(), mIngredients.get(i).getMeasure())
