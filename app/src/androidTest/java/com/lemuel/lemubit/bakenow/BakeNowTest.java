@@ -50,7 +50,7 @@ public class BakeNowTest {
         //get the recipes downloaded with Retrofit
         List<Recipe> recipes= mActivityTestRule.getActivity().testrecipes();
 
-        //click the RecyclerView at position 0
+        //click the RecyclerView at initialPosition 0
         onView(withId(R.id.recipe_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
         //Check if the Fragment which holds the ingredients was displayed
@@ -61,7 +61,7 @@ public class BakeNowTest {
                 .check(matches(withText(recipes.get(0).getName())));
 
 
-        //click the step descriptions at position 0
+        //click the step descriptions at initialPosition 0
         onView(withId(R.id.description_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
         //Check if the Instruction was displayed according to the clicked step

@@ -1,20 +1,16 @@
 package com.lemuel.lemubit.bakenow;
 
-import android.media.MediaDataSource;
 import android.net.Uri;
 import android.os.Parcelable;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.devbrackets.android.exomedia.ui.widget.VideoView;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -28,7 +24,6 @@ import com.google.android.exoplayer2.extractor.ExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
-import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
@@ -40,6 +35,7 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.TransferListener;
 import com.lemuel.lemubit.bakenow.Models.Steps;
 import com.lemuel.lemubit.bakenow.Utils.Util;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +50,7 @@ import butterknife.OnClick;
 public class RecipeStepDetail extends AppCompatActivity implements
         ExoPlayer.EventListener {
     List<Steps> steps;
-    int position;
+    int initialPosition;
     int currentPosition;
     String instruction;
     @BindView(R.id.video_view)
@@ -68,13 +64,16 @@ public class RecipeStepDetail extends AppCompatActivity implements
     private BandwidthMeter bandwidthMeter;
     private DataSource.Factory mediaDataSourceFactory;
     Toast toast;
+    Snackbar snackbar;
     private Long currentMediaPlayerPosition;
     private String currentUrl;
     private SimpleExoPlayer mExoPlayer;
+    Bundle savedState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        savedState = savedInstanceState;
         setContentView(R.layout.activity_recipe_step_detail);
         ButterKnife.bind(this);
         ActionBar actionbar = getSupportActionBar();
@@ -88,21 +87,21 @@ public class RecipeStepDetail extends AppCompatActivity implements
 
         if (savedInstanceState == null) {
             steps = getIntent().getExtras().getParcelableArrayList(getString(R.string.step));
-            position = getIntent().getExtras().getInt(getString(R.string.stepPosition));
+            initialPosition = getIntent().getExtras().getInt(getString(R.string.stepPosition));
             currentMediaPlayerPosition = 0L;
         } else {
             steps = savedInstanceState.getParcelableArrayList(getString(R.string.list));
-            position = savedInstanceState.getInt(getString(R.string.position));
+            initialPosition = savedInstanceState.getInt(getString(R.string.currentPosition));//todo//was initialPosition before
         }
-        currentPosition = position;
-        instruction = steps.get(position).getDescription();
-        String videoURL = steps.get(position).getVideoURL();
-        String thumbnailURL = steps.get(position).getThumbnailURL();
+        currentPosition = initialPosition;
+        instruction = steps.get(initialPosition).getDescription();
+        String videoURL = steps.get(initialPosition).getVideoURL();
+        String thumbnailURL = steps.get(initialPosition).getThumbnailURL();
 
         //display if video is not available
-        Snackbar snackbar = Snackbar
+        snackbar = Snackbar
                 .make(findViewById(R.id.videoDetailLayout), R.string.NoVideo, Snackbar.LENGTH_LONG);
-        snackbar.show();
+
 
         //Check if there is an instruction for the step
         if (Util.StringNotEmpty(instruction)) {
@@ -112,13 +111,12 @@ public class RecipeStepDetail extends AppCompatActivity implements
         if (savedInstanceState == null) {
             if (Util.StringNotEmpty(videoURL)) {
                 initializePlayer(videoURL);
-            } else if (Util.StringNotEmpty(thumbnailURL)) {
-                initializePlayer(thumbnailURL);
-
             } else {
-                imageView.setVisibility(View.VISIBLE);
+                snackbar.show();
                 videoView.setVisibility(View.INVISIBLE);
-                toast.show();
+
+                if (Util.StringNotEmpty(thumbnailURL))
+                    Picasso.with(this).load(thumbnailURL).placeholder(R.drawable.chef).into(imageView);
             }
         }
 
@@ -128,7 +126,7 @@ public class RecipeStepDetail extends AppCompatActivity implements
     public void next() {
         //stop playback
         release();
-        //increment position
+        //increment initialPosition
         currentPosition++;
 
         //if it has reached the end of the list, start over again
@@ -148,13 +146,12 @@ public class RecipeStepDetail extends AppCompatActivity implements
             videoView.setVisibility(View.VISIBLE);
             imageView.setVisibility(View.INVISIBLE);
             initializePlayer(videoURL);
-        } else if (Util.StringNotEmpty(thumbnailURL)) {
-            initializePlayer(thumbnailURL);
-
         } else {
-            toast.show();
-            imageView.setVisibility(View.VISIBLE);
+            snackbar.show();
             videoView.setVisibility(View.INVISIBLE);
+            currentUrl="";
+            if (Util.StringNotEmpty(thumbnailURL))
+                Picasso.with(this).load(thumbnailURL).placeholder(R.drawable.chef).into(imageView);
         }
 
     }
@@ -163,7 +160,7 @@ public class RecipeStepDetail extends AppCompatActivity implements
     public void back() {
         //stop playback
         release();
-        //decrement position
+        //decrement initialPosition
         currentPosition--;
         if (currentPosition < 0)
             currentPosition = steps.size() - 1;
@@ -181,14 +178,13 @@ public class RecipeStepDetail extends AppCompatActivity implements
             videoView.setVisibility(View.VISIBLE);
             imageView.setVisibility(View.INVISIBLE);
             initializePlayer(videoURL);
-        } else if (Util.StringNotEmpty(thumbnailURL)) {
-            // release();
-            initializePlayer(thumbnailURL);
         } else {
-            toast.show();
-            //   release();
+            snackbar.show();
+            currentUrl="";
             videoView.setVisibility(View.INVISIBLE);
-            imageView.setVisibility(View.VISIBLE);
+
+            if (Util.StringNotEmpty(thumbnailURL))
+                Picasso.with(this).load(thumbnailURL).placeholder(R.drawable.chef).into(imageView);
         }
     }
 
@@ -233,7 +229,7 @@ public class RecipeStepDetail extends AppCompatActivity implements
         super.onSaveInstanceState(outState);
         if (Util.ObjectisNotNull(outState)) {
             outState.putParcelableArrayList(getString(R.string.list), (ArrayList<? extends Parcelable>) steps);
-            outState.putInt(getString(R.string.position), position);
+            outState.putInt(getString(R.string.position), initialPosition);
             outState.putString(getString(R.string.currentUrl), currentUrl);
             outState.putInt(getString(R.string.currentPosition), currentPosition);
             if (Util.ObjectisNotNull(mExoPlayer)) {
@@ -249,7 +245,7 @@ public class RecipeStepDetail extends AppCompatActivity implements
         super.onRestoreInstanceState(savedInstanceState);
         if (savedInstanceState != null) {
             steps = savedInstanceState.getParcelableArrayList(getString(R.string.list));
-            position = savedInstanceState.getInt(getString(R.string.position));
+            initialPosition = savedInstanceState.getInt(getString(R.string.position));
             currentPosition = savedInstanceState.getInt(getString(R.string.currentPosition));
             currentUrl = savedInstanceState.getString(getString(R.string.currentUrl));
             currentMediaPlayerPosition = savedInstanceState.getLong(getString(R.string.currentMediaPosition));
@@ -260,7 +256,7 @@ public class RecipeStepDetail extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        if (currentUrl != null) {
+        if (currentUrl != null && savedState != null) {
             if (Util.StringNotEmpty(currentUrl)) {
                 initializePlayer();
             }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.widget.Toast;
 
@@ -21,7 +22,7 @@ public class Util {
     //check if a string is empty or null
     @NonNull
     public static Boolean emptyString(String value) {
-        if (value.isEmpty() || value.length() < 1 || value == null || value == "") {
+        if (TextUtils.isEmpty(value)) {
             return true;//if empty or null return true
         } else {
             return false;//return false if not empty
@@ -32,7 +33,7 @@ public class Util {
     //check if a String is neither empty nor null
     @NonNull
     public static Boolean StringNotEmpty(String value) {
-        if (value.isEmpty() || value.length() < 1 || value == null || value == "") {
+        if (TextUtils.isEmpty(value)) {
             return false;//if empty or null return false
         } else {
             return true;//return true if not empty
