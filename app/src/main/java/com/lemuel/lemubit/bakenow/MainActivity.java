@@ -29,7 +29,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Loads information from network request into recycler view using Retrofit
- * */
+ */
 public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.recipe_recycler_view)
@@ -40,16 +40,27 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView.LayoutManager mLayoutManager;
     RecipeAdapter recipeAdapter;
     public static List<Recipe> recipes;
+    Bundle savedState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        savedState = savedInstanceState;
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        loadRecipe(savedInstanceState);
+
+        //Check if there is internet connection before requesting
+        if (Util.isConnected(MainActivity.this)) {
+            loadRecipe(savedInstanceState);
+        }
+        else
+        {
+            Toast.makeText(MainActivity.this, R.string.connectionCheck, Toast.LENGTH_SHORT).show();
+        }
         loadAppropriateLayout();
 
     }
+
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {

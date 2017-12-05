@@ -3,6 +3,8 @@ package com.lemuel.lemubit.bakenow.Utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -121,5 +123,13 @@ public class Util {
         }
     }
 
+    public static boolean isConnected(Activity context) {
+        ConnectivityManager
+                cm = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null
+                && activeNetwork.isConnectedOrConnecting();
+    }
 
 }
