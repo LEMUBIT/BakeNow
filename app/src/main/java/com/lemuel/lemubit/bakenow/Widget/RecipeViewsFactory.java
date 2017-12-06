@@ -52,6 +52,7 @@ public class RecipeViewsFactory implements RemoteViewsService.RemoteViewsFactory
             Recipe recipe = gson.fromJson(recipeString, Recipe.class);
             Ingredients = recipe.getIngredients();
 
+
         }
 
         RecipeWidgetProvider.updateAppWidget(context, AppWidgetManager.getInstance(context), recipeWidgetId);
@@ -78,7 +79,7 @@ public class RecipeViewsFactory implements RemoteViewsService.RemoteViewsFactory
         String recipeText = Ingredients.get(position).getQuantity() + " "
                 + Util.Plural(Ingredients.get(position).getQuantity(),
                 Ingredients.get(position).getMeasure())
-                + " of " + Ingredients.get(position).getIngredient();
+                + " of " + Ingredients.get(position).getIngredient()+".";
 
         row.setTextViewText(R.id.recipeRow, recipeText);
         Intent i = new Intent();

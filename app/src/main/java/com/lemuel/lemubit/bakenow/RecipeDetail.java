@@ -314,11 +314,19 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
 
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        if (mTwoPane) {
+            //release resource, if it's a Tablet
+            release();
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (mTwoPane) {
-            release();
-            //reset variable firstRun
+            //reset variable firstRun for Tablet mode
             Util.firstRun = true;
         }
     }

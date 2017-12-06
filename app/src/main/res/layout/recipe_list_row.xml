@@ -3,6 +3,7 @@
     android:id="@+id/recipeRow"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:textColor="@color/colorPrimary"
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:textAppearance="?android:attr/textAppearanceListItem"
     android:textSize="20sp" />
