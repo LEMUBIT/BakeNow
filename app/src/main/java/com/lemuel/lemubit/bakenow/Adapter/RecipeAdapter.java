@@ -94,6 +94,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             RecipeImage = itemView.findViewById(R.id.recipeIMG);
             RecipeName = itemView.findViewById(R.id.recipeName);
             itemView.setOnClickListener(this);
+
+            //For material design Recycler view touch response
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 itemView.setOnTouchListener(new View.OnTouchListener() {
 
