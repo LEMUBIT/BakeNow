@@ -39,13 +39,13 @@ public class Util {
     //string is empty or null
     @NonNull
     public static Boolean emptyString(String value) {
-        return TextUtils.isEmpty(value) ? true : false;
+        return TextUtils.isEmpty(value);
     }
 
     //string is neither empty nor null
     @NonNull
     public static Boolean StringNotEmpty(String value) {
-        return TextUtils.isEmpty(value) ? false : true;
+        return !TextUtils.isEmpty(value);
     }
 
     // >=700DP
@@ -69,13 +69,13 @@ public class Util {
     //object is null
     @NonNull
     public static Boolean ObjectisNull(Object value) {
-        return value == null ? true : false;
+        return value == null;
     }
 
     //object is not null
     @NonNull
     public static Boolean ObjectisNotNull(Object value) {
-        return value == null ? false : true;
+        return value!= null;
     }
 
 
@@ -97,7 +97,7 @@ public class Util {
 
     //in Portrait mode
     public static Boolean isPortraitMode(int orientation) {
-        return orientation == Configuration.ORIENTATION_PORTRAIT ? true : false;
+        return orientation == Configuration.ORIENTATION_PORTRAIT;
     }
 
     //Check if device is currently connected
