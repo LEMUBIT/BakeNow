@@ -1,3 +1,23 @@
+/*
+ *
+ *   BakeNow application
+ *
+ *   @author Lemuel Ogbunude
+ *   Copyright (C) 2017 Lemuel Ogbunude (lemuelcco@gmail.com)
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *
+ */
+
 package com.lemuel.lemubit.bakenow;
 
 import android.os.Parcelable;
@@ -36,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView recipeRecyclerV;
     @BindView(R.id.recipe_progress)
     ProgressBar recipeProgress;
+
     Parcelable mListState;
     RecyclerView.LayoutManager mLayoutManager;
     RecipeAdapter recipeAdapter;
@@ -130,28 +151,28 @@ public class MainActivity extends AppCompatActivity {
         if (Util.isLargeScreen(MainActivity.this)) {
             //LARGE SCREEN
             if (Util.isPortraitMode(orientation)) {
-                recipeRecyclerV.setLayoutManager(new GridLayoutManager(MainActivity.this, 4));
+                recipeRecyclerV.setLayoutManager(new GridLayoutManager(MainActivity.this, getResources().getInteger(R.integer.gridSpan)));
                 mLayoutManager = recipeRecyclerV.getLayoutManager();
             } else {
-                recipeRecyclerV.setLayoutManager(new GridLayoutManager(MainActivity.this, 8));
+                recipeRecyclerV.setLayoutManager(new GridLayoutManager(MainActivity.this, getResources().getInteger(R.integer.gridSpan)));
                 mLayoutManager = recipeRecyclerV.getLayoutManager();
             }
         } else if (Util.isMediumScreen(MainActivity.this)) {
             //NOT SO LARGE SCREEN :)
             if (Util.isPortraitMode(orientation)) {
-                recipeRecyclerV.setLayoutManager(new GridLayoutManager(MainActivity.this, 3));
+                recipeRecyclerV.setLayoutManager(new GridLayoutManager(MainActivity.this, getResources().getInteger(R.integer.gridSpan)));
                 mLayoutManager = recipeRecyclerV.getLayoutManager();
             } else {
-                recipeRecyclerV.setLayoutManager(new GridLayoutManager(MainActivity.this, 5));
+                recipeRecyclerV.setLayoutManager(new GridLayoutManager(MainActivity.this, getResources().getInteger(R.integer.gridSpan)));
                 mLayoutManager = recipeRecyclerV.getLayoutManager();
             }
         } else {
             //SMALLER SCREENS
             if (Util.isPortraitMode(orientation)) {
-                recipeRecyclerV.setLayoutManager(new GridLayoutManager(MainActivity.this, 2));
+                recipeRecyclerV.setLayoutManager(new GridLayoutManager(MainActivity.this, getResources().getInteger(R.integer.gridSpan)));
                 mLayoutManager = recipeRecyclerV.getLayoutManager();
             } else {
-                recipeRecyclerV.setLayoutManager(new GridLayoutManager(MainActivity.this, 4));
+                recipeRecyclerV.setLayoutManager(new GridLayoutManager(MainActivity.this, getResources().getInteger(R.integer.gridSpan)));
                 mLayoutManager = recipeRecyclerV.getLayoutManager();
             }
         }

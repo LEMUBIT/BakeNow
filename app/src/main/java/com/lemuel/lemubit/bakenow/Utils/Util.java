@@ -1,3 +1,23 @@
+/*
+ *
+ *   BakeNow application
+ *
+ *   @author Lemuel Ogbunude
+ *   Copyright (C) 2017 Lemuel Ogbunude (lemuelcco@gmail.com)
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *
+ */
+
 package com.lemuel.lemubit.bakenow.Utils;
 
 import android.app.Activity;
@@ -7,106 +27,67 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
-import android.widget.Toast;
 
-import com.lemuel.lemubit.bakenow.MainActivity;
 import com.lemuel.lemubit.bakenow.R;
 
-/**
- * Created by charl on 10/11/2017.
- */
 
 public class Util {
 
-    //checks if activity was just run
+    //track activity first run
     public static Boolean firstRun = true;
 
-    //check if a string is empty or null
+    //string is empty or null
     @NonNull
     public static Boolean emptyString(String value) {
-        if (TextUtils.isEmpty(value)) {
-            return true;//if empty or null return true
-        } else {
-            return false;//return false if not empty
-        }
-
+        return TextUtils.isEmpty(value) ? true : false;
     }
 
-    //check if a String is neither empty nor null
+    //string is neither empty nor null
     @NonNull
     public static Boolean StringNotEmpty(String value) {
-        if (TextUtils.isEmpty(value)) {
-            return false;//if empty or null return false
-        } else {
-            return true;//return true if not empty
-        }
-
+        return TextUtils.isEmpty(value) ? false : true;
     }
 
-    //check if it's a large screen >=700DP
+    // >=700DP
     @NonNull
     public static Boolean isLargeScreen(Activity context) {
-        //CALCULATE SCREEN SIZE, IN THIS CASE LARGE SCREENS ARE >700
-        Boolean aBoolean=context.getResources().getBoolean(R.bool.isLargeTablet);
-        if (aBoolean) {
-            return true;
-        } else {
-            return false;
-        }
+        return context.getResources().getBoolean(R.bool.isLargeTablet);
     }
 
-    //check if it's a medium sized screen >=600DP
+    //>=600DP
     @NonNull
     public static Boolean isMediumScreen(Activity context) {
-        //CALCULATE SCREEN SIZE, IN THIS CASE MEDIUM SCREENS ARE DP>=600
-        Boolean aBoolean=context.getResources().getBoolean(R.bool.isTablet);
-        if (aBoolean) {
-            return true;
-        } else {
-            return false;
-        }
+        return context.getResources().getBoolean(R.bool.isTablet);
     }
 
-    //check if it's a smaller phone screen <600
+    //<600
     @NonNull
     public static Boolean isSmallScreen(Activity context) {
-        //CALCULATE SCREEN SIZE, IN THIS CASE MEDIUM SCREENS ARE DP>=600
-        Boolean aBoolean=context.getResources().getBoolean(R.bool.isSmallScreen);
-        if (aBoolean) {
-            return true;
-        } else {
-            return false;
-        }
+        return context.getResources().getBoolean(R.bool.isSmallScreen);
     }
 
-    //Check if a object is null
+    //object is null
     @NonNull
     public static Boolean ObjectisNull(Object value) {
-        if (value == null) {
-            return true;
-        } else {
-            return false;
-        }
+        return value == null ? true : false;
     }
 
-    //Check if a object is not null
+    //object is not null
     @NonNull
     public static Boolean ObjectisNotNull(Object value) {
-        if (value == null) {
-            return false;
-        } else {
-            return true;
-        }
+        return value == null ? false : true;
     }
 
+
     /*Check if a Recipe ingredient is more than one e.g if Eggs are measured in crates, it will
-        output '2 crates of eggs' instead of '2 crate of eggs'
+    *    output '2 crates of eggs' instead of '2 crate of eggs'
     */
     public static String Plural(Double quantity, String measure) {
+
         if (quantity <= 1.0) {
             return measure;
         } else if (quantity > 1.0 && (measure.equals("CUP") || measure.equals("UNIT"))) {
+            //If it is measured in either CUPs or UNITs
             measure = measure + "s";
             return measure;
         } else {
@@ -114,24 +95,17 @@ public class Util {
         }
     }
 
-    //Check if device is in Portrait mode
+    //in Portrait mode
     public static Boolean isPortraitMode(int orientation) {
-        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            return true;
-        } else {
-            return false;
-        }
+        return orientation == Configuration.ORIENTATION_PORTRAIT ? true : false;
     }
 
     //Check if device is currently connected
     //code snippet from www.androidhive.info
     public static boolean isConnected(Activity context) {
-        ConnectivityManager
-                cm = (ConnectivityManager) context
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        return activeNetwork != null
-                && activeNetwork.isConnectedOrConnecting();
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 
 }

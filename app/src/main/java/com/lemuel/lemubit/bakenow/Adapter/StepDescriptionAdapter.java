@@ -1,3 +1,23 @@
+/*
+ *
+ *   BakeNow application
+ *
+ *   @author Lemuel Ogbunude
+ *   Copyright (C) 2017 Lemuel Ogbunude (lemuelcco@gmail.com)
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *
+ */
+
 package com.lemuel.lemubit.bakenow.Adapter;
 
 import android.content.Context;
@@ -6,16 +26,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.lemuel.lemubit.bakenow.Models.Steps;
 import com.lemuel.lemubit.bakenow.R;
 
 import java.util.List;
 
-/**
- * Created by charl on 13/11/2017.
- */
 
 public class StepDescriptionAdapter extends RecyclerView.Adapter<StepDescriptionAdapter.StepViewHolder> {
 
@@ -26,7 +42,7 @@ public class StepDescriptionAdapter extends RecyclerView.Adapter<StepDescription
     OnStepClickListener mCallback;
 
     public interface OnStepClickListener {
-        void onStepSelected(int position,List<Steps> steps);
+        void onStepSelected(int position, List<Steps> steps);
     }
 
 
@@ -38,7 +54,8 @@ public class StepDescriptionAdapter extends RecyclerView.Adapter<StepDescription
 
     @Override
     public StepDescriptionAdapter.StepViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_step_description_card, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_step_description_card, parent,
+                false);
 
         try {
             mCallback = (OnStepClickListener) context;
@@ -71,7 +88,7 @@ public class StepDescriptionAdapter extends RecyclerView.Adapter<StepDescription
 
         @Override
         public void onClick(View view) {
-            mCallback.onStepSelected(getAdapterPosition(),steps);
+            mCallback.onStepSelected(getAdapterPosition(), steps);
 
         }
     }

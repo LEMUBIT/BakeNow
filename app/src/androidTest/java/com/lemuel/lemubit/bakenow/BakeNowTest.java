@@ -23,10 +23,9 @@ import com.lemuel.lemubit.bakenow.Models.Recipe;
 
 import java.util.List;
 
-/**
- * Created by charl on 02/12/2017.
- */
-
+/*
+* Runs some Espresso test on the UI
+* */
 @RunWith(AndroidJUnit4.class)
 public class BakeNowTest {
 
@@ -48,7 +47,7 @@ public class BakeNowTest {
         }
 
         //get the recipes downloaded with Retrofit
-        List<Recipe> recipes= mActivityTestRule.getActivity().testrecipes();
+        List<Recipe> recipes = mActivityTestRule.getActivity().testrecipes();
 
         //click the RecyclerView at initialPosition 0
         onView(withId(R.id.recipe_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));

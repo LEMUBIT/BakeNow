@@ -1,3 +1,23 @@
+/*
+ *
+ *   BakeNow application
+ *
+ *   @author Lemuel Ogbunude
+ *   Copyright (C) 2017 Lemuel Ogbunude (lemuelcco@gmail.com)
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *
+ */
+
 package com.lemuel.lemubit.bakenow.Adapter;
 
 import android.annotation.TargetApi;
@@ -16,7 +36,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.lemuel.lemubit.bakenow.MainActivity;
@@ -29,9 +48,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-/**
- * Created by charl on 10/11/2017.
- */
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder> {
 

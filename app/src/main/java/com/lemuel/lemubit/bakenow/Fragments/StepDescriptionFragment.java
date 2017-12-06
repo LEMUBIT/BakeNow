@@ -1,3 +1,23 @@
+/*
+ *
+ *   BakeNow application
+ *
+ *   @author Lemuel Ogbunude
+ *   Copyright (C) 2017 Lemuel Ogbunude (lemuelcco@gmail.com)
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *
+ */
+
 package com.lemuel.lemubit.bakenow.Fragments;
 
 import android.os.Bundle;
@@ -10,7 +30,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.lemuel.lemubit.bakenow.Adapter.StepDescriptionAdapter;
 import com.lemuel.lemubit.bakenow.Models.Recipe;
@@ -21,15 +40,12 @@ import com.lemuel.lemubit.bakenow.Utils.Util;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by charl on 10/11/2017.
- */
 
 public class StepDescriptionFragment extends Fragment {
     int position;
     List<Recipe> mRecipes = new ArrayList<>();
     List<Steps> mSteps = new ArrayList<>();
-    RecyclerView.LayoutManager mLayoutManager;
+
 
     @Nullable
     @Override
@@ -68,7 +84,7 @@ public class StepDescriptionFragment extends Fragment {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(getString(R.string.list), (ArrayList<? extends Parcelable>) mSteps);
         outState.putInt(getString(R.string.position), position);
-        outState.putParcelableArrayList(getString(R.string.recipeList),(ArrayList<? extends Parcelable>) mRecipes);
+        outState.putParcelableArrayList(getString(R.string.recipeList), (ArrayList<? extends Parcelable>) mRecipes);
     }
 
     @Override
@@ -77,7 +93,7 @@ public class StepDescriptionFragment extends Fragment {
         if (savedInstanceState != null) {
             mSteps = savedInstanceState.getParcelableArrayList(getString(R.string.list));
             position = savedInstanceState.getInt(getString(R.string.position));
-            mRecipes= savedInstanceState.getParcelableArrayList(getString(R.string.recipeList));
+            mRecipes = savedInstanceState.getParcelableArrayList(getString(R.string.recipeList));
         }
     }
 }

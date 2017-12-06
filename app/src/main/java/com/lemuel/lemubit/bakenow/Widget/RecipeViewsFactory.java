@@ -1,3 +1,23 @@
+/*
+ *
+ *   BakeNow application
+ *
+ *   @author Lemuel Ogbunude
+ *   Copyright (C) 2017 Lemuel Ogbunude (lemuelcco@gmail.com)
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *
+ */
+
 package com.lemuel.lemubit.bakenow.Widget;
 
 import android.appwidget.AppWidgetManager;
@@ -15,12 +35,8 @@ import com.lemuel.lemubit.bakenow.Models.Recipe;
 import com.lemuel.lemubit.bakenow.R;
 import com.lemuel.lemubit.bakenow.Utils.Util;
 
-import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by charl on 22/11/2017.
- */
 
 public class RecipeViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
@@ -79,7 +95,7 @@ public class RecipeViewsFactory implements RemoteViewsService.RemoteViewsFactory
         String recipeText = Ingredients.get(position).getQuantity() + " "
                 + Util.Plural(Ingredients.get(position).getQuantity(),
                 Ingredients.get(position).getMeasure())
-                + " of " + Ingredients.get(position).getIngredient()+".";
+                + " of " + Ingredients.get(position).getIngredient() + ".";
 
         row.setTextViewText(R.id.recipeRow, recipeText);
         Intent i = new Intent();
