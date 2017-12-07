@@ -29,23 +29,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 import com.google.android.exoplayer2.DefaultLoadControl;
-import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
-import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.extractor.ExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
@@ -96,7 +90,9 @@ public class RecipeStepDetail extends AppCompatActivity {
         setContentView(R.layout.activity_recipe_step_detail);
         ButterKnife.bind(this);
         ActionBar actionbar = getSupportActionBar();
-        actionbar.setDisplayHomeAsUpEnabled(true);
+        if (actionbar != null) {
+            actionbar.setDisplayHomeAsUpEnabled(true);
+        }
 
         bandwidthMeter = new DefaultBandwidthMeter();
         mediaDataSourceFactory = new DefaultDataSourceFactory
@@ -124,7 +120,7 @@ public class RecipeStepDetail extends AppCompatActivity {
                 .make(findViewById(R.id.recipeStepLayout), R.string.NoVideo, Snackbar.LENGTH_LONG);
 
 
-        //Check if there is an instruction for the step
+        //Check if there is an description for the step
         if (Util.StringNotEmpty(instruction)) {
             instructionTXT.setText(instruction);
         }
@@ -162,7 +158,7 @@ public class RecipeStepDetail extends AppCompatActivity {
         String videoURL = steps.get(currentPosition).getVideoURL();
         String thumbnailURL = steps.get(currentPosition).getThumbnailURL();
 
-        //Check if there is an instruction before setting the text
+        //Check if there is an description before setting the text
         if (Util.StringNotEmpty(instruction)) {
             instructionTXT.setText(instruction);
         }

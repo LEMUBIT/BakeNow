@@ -18,7 +18,6 @@
     <string name="recipeList">recipeList</string>
     <string name="bakeNow">bakenow</string>
     <string name="currentUrl">currentUrl</string>
-    <string name="stepDescription">stepDescription</string>
     <string name="ingredientsFragm">ingredientsFragm</string>
     <string name="currentMediaPosition">currentMediaPosition</string>
     <string name="step">step</string>
@@ -26,4 +25,6 @@
     <string name="currentPosition">currentPosition</string>
     <string name="listkey">listkey</string>
     <string name="playWhenReady">playWhenReady</string>
+    <string name="stepDescription">stepDescription</string>
+    <string name="descriptionKey">descriptionKey</string>
 </resources>

@@ -31,6 +31,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -82,7 +83,7 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
     ImageView imageView;
     private boolean mTwoPane;
     List<Recipe> recipes = new ArrayList<>();
-
+    String description;
     Boolean playWhenReady;
     private SimpleExoPlayer mExoPlayer;
     private BandwidthMeter bandwidthMeter;
@@ -99,9 +100,21 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
         ButterKnife.bind(this);
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             ActionBar actionBar = getSupportActionBar();
-            actionBar.setDisplayHomeAsUpEnabled(true);
+            if (actionBar != null) {
+                actionBar.setDisplayHomeAsUpEnabled(true);
+            }
         }
 
+        //check if it is the Two Fragment layout for Large screens
+        if (findViewById(R.id.recipeStepLayout) != null) {
+            //the layout for large screens
+            mTwoPane = true;
+            videoView = findViewById(R.id.video_view);
+            instructionTXT = findViewById(R.id.InstructionTXT);
+            imageView = findViewById(R.id.imageView);
+        } else {
+            mTwoPane = false;
+        }
 
         bandwidthMeter = new DefaultBandwidthMeter();
         mediaDataSourceFactory = new DefaultDataSourceFactory(this,
@@ -112,6 +125,7 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
         //display if video is not available
         snackbar = Snackbar
                 .make(findViewById(R.id.recipeDetailMainLayout), R.string.NoVideo, Snackbar.LENGTH_LONG);
+
 
         if (savedInstanceState == null) {
             position = getIntent().getExtras().getInt(getString(R.string.position));
@@ -125,20 +139,13 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
         ingredientsLBL.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_assignment_black_24dp, 0, 0, 0);
         stepsLBL.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_done_all_black_24dp, 0, 0, 0);
 
+
+
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             ToolBarTitle.setText(recipes.get(position).getName());
         }
 
-        //check if it is the Two Fragment layout for Large screens
-        if (findViewById(R.id.recipeStepLayout) != null) {
-            //the layout for large screens
-            mTwoPane = true;
-            videoView = findViewById(R.id.video_view);
-            instructionTXT = findViewById(R.id.InstructionTXT);
-            imageView = findViewById(R.id.imageView);
-        } else {
-            mTwoPane = false;
-        }
+
 
         //Begin fragment transaction if savedInstance state is null
         if (savedInstanceState == null) {
@@ -177,6 +184,7 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
             outState.putParcelableArrayList(getString(R.string.list), (ArrayList<? extends Parcelable>) recipes);
             outState.putInt(getString(R.string.position), position);
             outState.putString(getString(R.string.currentUrl), currentUrl);
+            outState.putString(getString(R.string.descriptionKey), description);
             getSupportFragmentManager().putFragment(outState, getString(R.string.stepDescription), stepDescriptionFragment);
             getSupportFragmentManager().putFragment(outState, getString(R.string.ingredientsFragm), ingredientsFrag);
             if (Util.ObjectisNotNull(mExoPlayer)) {
@@ -202,11 +210,11 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
                     getSupportFragmentManager().getFragment(savedInstanceState, getString(R.string.stepDescription));
             ingredientsFrag = (IngredientsFragment)
                     getSupportFragmentManager().getFragment(savedInstanceState, getString(R.string.ingredientsFragm));
-
             if (mTwoPane) {
                 currentMediaPlayerPosition = savedInstanceState.getLong(getString(R.string.currentMediaPosition));
                 currentUrl = savedInstanceState.getString(getString(R.string.currentUrl));
                 playWhenReady = savedInstanceState.getBoolean(getString(R.string.playWhenReady));
+                description =savedInstanceState.getString(getString(R.string.descriptionKey));
             }
         }
     }
@@ -232,12 +240,12 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
     public void onStepSelected(int stepPosition, List<Steps> steps) {
         Bundle s = new Bundle();
         if (mTwoPane) {
-            String instruction = steps.get(stepPosition).getDescription();
+            description = steps.get(stepPosition).getDescription();
             String videoURL = steps.get(stepPosition).getVideoURL();
             String thumbnailURL = steps.get(stepPosition).getThumbnailURL();
 
-            if (Util.StringNotEmpty(instruction)) {
-                instructionTXT.setText(instruction);
+            if (Util.StringNotEmpty(description)) {
+                instructionTXT.setText(description);
             }
 
             if (Util.StringNotEmpty(videoURL)) {
@@ -319,6 +327,7 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
         if (mTwoPane) {
             if (Util.StringNotEmpty(currentUrl)) {
                 setupVideoView();
+                instructionTXT.setText(description);
             }
         }
     }
