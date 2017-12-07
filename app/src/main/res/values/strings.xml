@@ -25,4 +25,5 @@
     <string name="stepPosition">stepPosition</string>
     <string name="currentPosition">currentPosition</string>
     <string name="listkey">listkey</string>
+    <string name="playWhenReady">playWhenReady</string>
 </resources>

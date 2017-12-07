@@ -29,16 +29,23 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
+import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.extractor.ExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
@@ -80,6 +87,7 @@ public class RecipeStepDetail extends AppCompatActivity {
     private String currentUrl;
     private SimpleExoPlayer mExoPlayer;
     Bundle savedState;
+    Boolean playWhenReady;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,9 +108,11 @@ public class RecipeStepDetail extends AppCompatActivity {
             steps = getIntent().getExtras().getParcelableArrayList(getString(R.string.step));
             initialPosition = getIntent().getExtras().getInt(getString(R.string.stepPosition));
             currentMediaPlayerPosition = 0L;
+            playWhenReady = true;
         } else {
             steps = savedInstanceState.getParcelableArrayList(getString(R.string.list));
             initialPosition = savedInstanceState.getInt(getString(R.string.currentPosition));
+            playWhenReady = savedInstanceState.getBoolean(getString(R.string.playWhenReady));
         }
         currentPosition = initialPosition;
         instruction = steps.get(initialPosition).getDescription();
@@ -137,6 +147,10 @@ public class RecipeStepDetail extends AppCompatActivity {
     public void next() {
         //stop playback
         release();
+
+        //play next video
+        playWhenReady = true;
+
         //increment initialPosition
         currentPosition++;
 
@@ -172,6 +186,10 @@ public class RecipeStepDetail extends AppCompatActivity {
     public void back() {
         //stop playback
         release();
+
+        //play next video
+        playWhenReady = true;
+
         //decrement initialPosition
         currentPosition--;
         if (currentPosition < 0)
@@ -214,7 +232,7 @@ public class RecipeStepDetail extends AppCompatActivity {
             MediaSource mediaSource = new ExtractorMediaSource(Uri.parse(url),
                     mediaDataSourceFactory, extractorsFactory, null, null);
             mExoPlayer.prepare(mediaSource);
-            mExoPlayer.setPlayWhenReady(true);
+            mExoPlayer.setPlayWhenReady(playWhenReady);
         }
     }
 
@@ -230,7 +248,7 @@ public class RecipeStepDetail extends AppCompatActivity {
         MediaSource mediaSource = new ExtractorMediaSource(Uri.parse(currentUrl),
                 mediaDataSourceFactory, extractorsFactory, null, null);
         mExoPlayer.prepare(mediaSource);
-        mExoPlayer.setPlayWhenReady(true);
+        mExoPlayer.setPlayWhenReady(playWhenReady);
         mExoPlayer.seekTo(currentMediaPlayerPosition);
 
 
@@ -246,6 +264,7 @@ public class RecipeStepDetail extends AppCompatActivity {
             outState.putInt(getString(R.string.currentPosition), currentPosition);
             if (Util.ObjectisNotNull(mExoPlayer)) {
                 currentMediaPlayerPosition = mExoPlayer.getCurrentPosition();
+                outState.putBoolean(getString(R.string.playWhenReady), playWhenReady);
                 outState.putLong(getString(R.string.currentMediaPosition), currentMediaPlayerPosition);
             }
 
@@ -261,6 +280,7 @@ public class RecipeStepDetail extends AppCompatActivity {
             currentPosition = savedInstanceState.getInt(getString(R.string.currentPosition));
             currentUrl = savedInstanceState.getString(getString(R.string.currentUrl));
             currentMediaPlayerPosition = savedInstanceState.getLong(getString(R.string.currentMediaPosition));
+            playWhenReady = savedInstanceState.getBoolean(getString(R.string.playWhenReady));
         }
     }
 
@@ -279,11 +299,13 @@ public class RecipeStepDetail extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         if (mExoPlayer != null) {
+            playWhenReady = mExoPlayer.getPlayWhenReady();
             mExoPlayer.setPlayWhenReady(false);
         }
     }
 
     public void release() {
+
         if (mExoPlayer != null) {
             mExoPlayer.stop();
             mExoPlayer.release();
@@ -296,6 +318,5 @@ public class RecipeStepDetail extends AppCompatActivity {
         super.onStop();
         release();
     }
-
 
 }

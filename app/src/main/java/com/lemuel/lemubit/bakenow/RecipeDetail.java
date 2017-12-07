@@ -83,7 +83,7 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
     private boolean mTwoPane;
     List<Recipe> recipes = new ArrayList<>();
 
-
+    Boolean playWhenReady;
     private SimpleExoPlayer mExoPlayer;
     private BandwidthMeter bandwidthMeter;
     private DataSource.Factory mediaDataSourceFactory;
@@ -116,9 +116,11 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
         if (savedInstanceState == null) {
             position = getIntent().getExtras().getInt(getString(R.string.position));
             recipes = MainActivity.recipes;
+            playWhenReady = true;
         } else {
             recipes = savedInstanceState.getParcelableArrayList(getString(R.string.list));
             position = savedInstanceState.getInt(getString(R.string.position));
+            playWhenReady = savedInstanceState.getBoolean(getString(R.string.playWhenReady));
         }
         ingredientsLBL.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_assignment_black_24dp, 0, 0, 0);
         stepsLBL.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_done_all_black_24dp, 0, 0, 0);
@@ -180,6 +182,7 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
             if (Util.ObjectisNotNull(mExoPlayer)) {
                 currentMediaPlayerPosition = mExoPlayer.getCurrentPosition();
                 outState.putLong(getString(R.string.currentMediaPosition), currentMediaPlayerPosition);
+                outState.putBoolean(getString(R.string.playWhenReady), playWhenReady);
             }
         } else if (Util.ObjectisNotNull(outState) && !mTwoPane) {
             outState.putParcelableArrayList(getString(R.string.list), (ArrayList<? extends Parcelable>) recipes);
@@ -203,6 +206,7 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
             if (mTwoPane) {
                 currentMediaPlayerPosition = savedInstanceState.getLong(getString(R.string.currentMediaPosition));
                 currentUrl = savedInstanceState.getString(getString(R.string.currentUrl));
+                playWhenReady = savedInstanceState.getBoolean(getString(R.string.playWhenReady));
             }
         }
     }
@@ -238,6 +242,10 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
 
             if (Util.StringNotEmpty(videoURL)) {
                 release();
+
+                //play next video
+                playWhenReady = true;
+
                 videoView.setVisibility(View.VISIBLE);
                 imageView.setVisibility(View.INVISIBLE);
                 setupVideoView(videoURL);
@@ -274,7 +282,7 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
             MediaSource mediaSource = new ExtractorMediaSource(Uri.parse(url),
                     mediaDataSourceFactory, extractorsFactory, null, null);
             mExoPlayer.prepare(mediaSource);
-            mExoPlayer.setPlayWhenReady(true);
+            mExoPlayer.setPlayWhenReady(playWhenReady);
 
         }
 
@@ -295,7 +303,7 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
             MediaSource mediaSource = new ExtractorMediaSource(Uri.parse(currentUrl),
                     mediaDataSourceFactory, extractorsFactory, null, null);
             mExoPlayer.prepare(mediaSource);
-            mExoPlayer.setPlayWhenReady(true);
+            mExoPlayer.setPlayWhenReady(playWhenReady);
             //after resuming media player, seek to the latest position
             mExoPlayer.seekTo(currentMediaPlayerPosition);
 
@@ -320,6 +328,7 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
         super.onPause();
         if (mTwoPane) {
             if (mExoPlayer != null) {
+                playWhenReady = mExoPlayer.getPlayWhenReady();
                 mExoPlayer.setPlayWhenReady(false);
             }
         }
@@ -330,7 +339,7 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
     protected void onStop() {
         super.onStop();
         if (mTwoPane) {
-            //release resource, if it's a Tablet
+            //release resource, if Tablet
             release();
         }
     }
