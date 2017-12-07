@@ -30,8 +30,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -140,11 +141,9 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
         stepsLBL.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_done_all_black_24dp, 0, 0, 0);
 
 
-
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             ToolBarTitle.setText(recipes.get(position).getName());
         }
-
 
 
         //Begin fragment transaction if savedInstance state is null
@@ -214,7 +213,7 @@ public class RecipeDetail extends AppCompatActivity implements StepDescriptionAd
                 currentMediaPlayerPosition = savedInstanceState.getLong(getString(R.string.currentMediaPosition));
                 currentUrl = savedInstanceState.getString(getString(R.string.currentUrl));
                 playWhenReady = savedInstanceState.getBoolean(getString(R.string.playWhenReady));
-                description =savedInstanceState.getString(getString(R.string.descriptionKey));
+                description = savedInstanceState.getString(getString(R.string.descriptionKey));
             }
         }
     }
