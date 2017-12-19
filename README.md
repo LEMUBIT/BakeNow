@@ -8,3 +8,6 @@ Android Baking App that will allows sharing of recipes gotten from a JSON respon
 ![alt text](Pics/Screenshot_20171130-095813.png "Description goes here")
 
 ![alt text](Pics/Screenshot_20171130-095927.png "Description goes here")
+
+## Licence & copyright 
+Licenced under the [MIT Licence](Licence)
